@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".fragments.MainFragment">
+
+    <data>
+
+        <variable name="viewModel"
+            type="com.jr.census.viewmodel.MainViewModel"/>
+
+    </data>
+
+
+    <FrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/childContainer"
+        android:layout_gravity="center"
+        />
+
+</layout>

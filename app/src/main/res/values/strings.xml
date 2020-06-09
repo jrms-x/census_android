@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">Census</string>
+    <string name="aqua_census">CENSUS</string>
+    <string name="start">INICIAR</string>
+    <string name="version">Versión %s</string>
+    <string name="user">Usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="register">¿No tienes cuenta aún? crea una</string>
+    <string name="login_failed">Error al iniciar sesión</string>
+    <string name="user_or_password_invalid">Usuario o contraseña no válido</string>
+    <string name="error_connection">No hay conexión al servidor</string>
+    <string name="properties_fail_response">Error al obtener inmuebles</string>
+    <string name="properties_no_connection">Error al obtener inmuebles, verifique conexión a internet</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_set_block">Seleccionar bloque</string>
+    <string name="cancel">Cancelar</string>
+    <string name="accept">Aceptar</string>
+    <string name="block">Bloque</string>
+    <string name="blockTranslate">Manzana</string>
+    <string name="invalid_block_value">Escriba un valor válido para bloque, solo se admiten números</string>
+    <string name="empty_properties">No se encontraron inmuebles</string>
+    <string name="select_block_message">Seleccione un bloque para mostrar sus propiedades</string>
+    <string name="number_properties_text">Número de inmuebles:</string>
+    <string name="select_block">Seleccionar bloque</string>
+    <string name="blocks_not_found">No se encontraron bloques guardados</string>
+    <string name="serial_number">Número de serie</string>
+    <string name="street">Calle</string>
+    <string name="number">Número</string>
+    <string name="interiorNumberShort">Interior</string>
+    <string name="interiorNumber">Número interior</string>
+    <string name="search_properties">Buscar inmuebles</string>
+    <string name="search">Buscar</string>
+    <string name="name">Nombre</string>
+    <string name="properties_not_found">No se encontraron propiedades</string>
+    <string name="take_photo">Tomar foto</string>
+    <string name="image_not_captured">No se tomó foto</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="ask_logout">¿Desea cerrar sesión?</string>
+
+    <string name="property">Inmueble</string>
+    <string name="detail">Detalle</string>
+    <string name="register_census">Padrón</string>
+    <string name="pictures">Fotos</string>
+    <string name="title_activity_main2">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vulputate varius justo facilisis tristique. Maecenas lectus ipsum, accumsan sed libero sed, eleifend maximus leo. Donec volutpat maximus malesuada. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla venenatis urna ac rutrum vestibulum. Duis rhoncus metus non risus volutpat bibendum. Quisque eros purus, pretium non enim quis, vehicula faucibus tellus. Fusce rutrum pulvinar est et faucibus.  Fusce molestie mauris et sapien elementum, quis facilisis tortor lobortis. Cras vitae mi tortor. Mauris dolor lacus, eleifend nec odio ut, viverra sagittis libero. Suspendisse gravida metus iaculis purus venenatis rutrum. In convallis sem sed ex dictum, scelerisque efficitur urna aliquet. Nulla facilisi. Etiam ullamcorper quis est quis porta. Sed posuere tempus dui sit amet pretium.  Vivamus vitae arcu ut elit venenatis lacinia sed ut magna. Quisque porta augue libero, at porttitor tortor dignissim sed. Curabitur rutrum vestibulum lacus, in blandit erat interdum sit amet. In auctor lorem ornare pellentesque aliquam. Quisque ante lorem, tempus non neque vitae, dapibus luctus lorem. Nullam in quam vel urna volutpat sollicitudin. Nam suscipit, metus quis pellentesque consequat, urna libero semper purus, dapibus laoreet justo est in urna. Aenean et arcu placerat, semper leo a, cursus dolor. Fusce eu ligula sagittis, varius nisi at, lacinia mauris.  Mauris vestibulum, sapien vitae lacinia varius, risus nisi iaculis arcu, nec tincidunt lacus urna a ante. Sed scelerisque ac nunc non venenatis. In non justo at nibh commodo bibendum at sit amet dolor. Morbi ultricies fermentum consectetur. Fusce aliquet orci placerat lorem iaculis, sed imperdiet turpis tempus. Phasellus fringilla, purus non pharetra varius, nunc orci sodales dui, nec venenatis est orci at tortor. Mauris hendrerit elementum magna eu finibus. Nam sed interdum lorem, non pellentesque magna. Vestibulum ut quam sed nunc eleifend consectetur eu in leo. Aenean facilisis malesuada semper.  Praesent interdum, lacus id euismod suscipit, purus dolor facilisis neque, quis fermentum nulla ipsum id turpis. Quisque consectetur fringilla leo eu rhoncus. Suspendisse vel nulla elit. Sed eget nulla tempus dui gravida imperdiet. Aliquam accumsan arcu eu congue faucibus. In tempor, turpis a pretium accumsan, metus ipsum maximus metus, ac sollicitudin ex ligula at neque. Ut sed convallis purus, porta auctor justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vulputate varius justo facilisis tristique. Maecenas lectus ipsum, accumsan sed libero sed, eleifend maximus leo. Donec volutpat maximus malesuada. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla venenatis urna ac rutrum vestibulum. Duis rhoncus metus non risus volutpat bibendum. Quisque eros purus, pretium non enim quis, vehicula faucibus tellus. Fusce rutrum pulvinar est et faucibus.  Fusce molestie mauris et sapien elementum, quis facilisis tortor lobortis. Cras vitae mi tortor. Mauris dolor lacus, eleifend nec odio ut, viverra sagittis libero. Suspendisse gravida metus iaculis purus venenatis rutrum. In convallis sem sed ex dictum, scelerisque efficitur urna aliquet. Nulla facilisi. Etiam ullamcorper quis est quis porta. Sed posuere tempus dui sit amet pretium.  Vivamus vitae arcu ut elit venenatis lacinia sed ut magna. Quisque porta augue libero, at porttitor tortor dignissim sed. Curabitur rutrum vestibulum lacus, in blandit erat interdum sit amet. In auctor lorem ornare pellentesque aliquam. Quisque ante lorem, tempus non neque vitae, dapibus luctus lorem. Nullam in quam vel urna volutpat sollicitudin. Nam suscipit, metus quis pellentesque consequat, urna libero semper purus, dapibus laoreet justo est in urna. Aenean et arcu placerat, semper leo a, cursus dolor. Fusce eu ligula sagittis, varius nisi at, lacinia mauris.  Mauris vestibulum, sapien vitae lacinia varius, risus nisi iaculis arcu, nec tincidunt lacus urna a ante. Sed scelerisque ac nunc non venenatis. In non justo at nibh commodo bibendum at sit amet dolor. Morbi ultricies fermentum consectetur. Fusce aliquet orci placerat lorem iaculis, sed imperdiet turpis tempus. Phasellus fringilla, purus non pharetra varius, nunc orci sodales dui, nec venenatis est orci at tortor. Mauris hendrerit elementum magna eu finibus. Nam sed interdum lorem, non pellentesque magna. Vestibulum ut quam sed nunc eleifend consectetur eu in leo. Aenean facilisis malesuada semper.  Praesent interdum, lacus id euismod suscipit, purus dolor facilisis neque, quis fermentum nulla ipsum id turpis. Quisque consectetur fringilla leo eu rhoncus. Suspendisse vel nulla elit. Sed eget nulla tempus dui gravida imperdiet. Aliquam accumsan arcu eu congue faucibus. In tempor, turpis a pretium accumsan, metus ipsum maximus metus, ac sollicitudin ex ligula at neque. Ut sed convallis purus, porta auctor justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+    </string>
+    <string name="info">Información</string>
+    <string name="location">Ubicación</string>
+    <string name="land">Predio</string>
+    <string name="take">Toma</string>
+    <string name="meter">Medidor</string>
+    <string name="hidraulics">Hidraulica</string>
+    <string name="survey">Encuesta</string>
+    <string name="attachment">Adjunto</string>
+
+    <string name="aqua_register">REGISTRAR USUARIO</string>
+    <string name="register_user">Registrar</string>
+    <string name="login">¿Ya tienes una cuenta? Inicia sesión</string>
+    <string name="icon_generic">icon</string>
+    <string name="property_type_hint">TIPO DE INMUEBLE</string>
+    <string name="btn_save">Guardar</string>
+    <string name="round_src_item_picture">Round src item_picture</string>
+    <string name="generic_picture_content_desc">picture</string>
+    <string name="derived">Derivada</string>
+    <string name="suburb">Colonia</string>
+    <string name="lot">Lote</string>
+    <string name="bis">Bis</string>
+    <string name="between">Entre</string>
+    <string name="clientRating">Cal. cliente</string>
+    <string name="picturesNotFound">No se encontraron fotos</string>
+
+</resources>

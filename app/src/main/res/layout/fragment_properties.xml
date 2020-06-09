@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragments.PropertiesFragment"
+    >
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.jr.census.viewmodel.MainViewModel" />
+        <import type="android.view.View"/>
+    </data>
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginBottom="?android:attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:layout_width="match_parent"
+                android:id="@+id/refreshProperties"
+                app:refreshing="@{viewModel.propertiesListModel.loading}"
+                app:onRefreshListener="@{() -> viewModel.listenerRefreshProperties.invoke()}"
+                android:layout_height="match_parent">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerProperties"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:listitem="@layout/property_list_item" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+            <TextView
+                android:id="@+id/messageProperties"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@={viewModel.propertiesListModel.message}"
+                android:visibility="@{viewModel.propertiesListModel.messageVisibility}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="No encontrado" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:fabAlignmentMode="center"
+            app:buttonGravity="center_vertical"
+            android:id="@+id/appbar"
+            app:menu="@menu/properties_menu"
+            app:navigationIcon="@drawable/menu_icon"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fabBar"
+            android:onClick="@{() -> viewModel.showDialog()}"
+            app:srcCompat="@drawable/content_paste"
+            app:layout_anchor="@id/appbar"
+            />
+
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+</layout>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.jr.census.viewmodel.RegisterViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/input_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:theme="@style/LoginTheme"
+        tools:context=".activities.RegisterActivity">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/register_bg"
+            android:contentDescription="@string/aqua_register"
+            android:scaleType="fitStart"/>
+
+        <TextView
+            android:id="@+id/name_app"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="@string/aqua_register"
+            android:layout_marginTop="32dp"
+            android:padding="16dp"
+            android:textColor="@color/design_default_color_background"
+            android:textSize="32sp"
+            android:textStyle="bold"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/outlinedTextField"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:hint="@string/user"
+            android:textColorHint="@color/colorTextLow"
+            app:boxBackgroundColor="@color/colorPrimary"
+            app:boxStrokeColor="@color/colorAccent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@={viewModel.registerUser.user}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/outlinedTextField_pass"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/outlinedTextField"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:hint="@string/password"
+            android:textColorHint="@color/colorTextLow"
+            app:boxBackgroundColor="@color/colorPrimary"
+            app:boxStrokeColor="@color/colorAccent"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorTextLow">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@={viewModel.registerUser.password}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_iniciar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_below="@id/outlinedTextField_pass"
+            android:backgroundTint="@color/colorAccent"
+            android:onClick="@{() -> viewModel.onRegisterClick()}"
+            android:text="@string/register_user"
+            android:textColor="@color/colorText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/btn_iniciar"
+            android:onClick="@{() -> viewModel.onLoginClick()}"
+            android:text="@string/login" />
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/goToGeneralInformation"
+        android:title="@string/detail"
+        android:icon="@drawable/home"
+        />
+
+    <item
+        android:id="@+id/goToRegisterCensus"
+        android:title="@string/register_census"
+        android:icon="@drawable/assignment"
+        />
+
+    <item
+        android:id="@+id/goToPictures"
+        android:title="@string/pictures"
+        android:icon="@drawable/image"
+        />
+
+</menu>

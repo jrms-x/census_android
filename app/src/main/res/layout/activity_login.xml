@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.jr.census.viewmodel.UserViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+        <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:theme="@style/LoginTheme"
+            tools:context=".activities.MainActivity">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/drop_login"
+                    android:contentDescription="@string/aqua_census"
+                    android:scaleType="fitEnd"/>
+
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/drop_login"
+                    android:contentDescription="@string/aqua_census"
+                    android:scaleType="fitStart"/>
+
+                <LinearLayout
+                    android:id="@+id/input_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerInParent="true"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/name_app"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/aqua_census"
+                        android:textColor="@color/colorText"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+
+
+
+                    <TextView
+                        android:id="@+id/versionTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        tools:text="Versión 2.0" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/outlinedTextField"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="70dp"
+                        android:hint="@string/user"
+                        android:textColorHint="@color/colorTextLow"
+                        app:boxBackgroundColor="@color/colorPrimary"
+                        app:boxStrokeColor="@color/colorAccent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtUser"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:text="@={viewModel.loginUser.user}" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/outlinedTextField_pass"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:hint="@string/password"
+                        android:textColorHint="@color/colorTextLow"
+                        app:boxBackgroundColor="@color/colorPrimary"
+                        app:boxStrokeColor="@color/colorAccent"
+                        app:passwordToggleEnabled="true"
+                        app:passwordToggleTint="@color/colorTextLow">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPassword"
+
+                            android:text="@={viewModel.loginUser.password}" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ProgressBar
+                        android:id="@+id/loadingLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:visibility="@{viewModel.loginUser.loading ? View.VISIBLE : View.GONE}" />
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_iniciar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:backgroundTint="@color/colorAccent"
+                        android:onClick="@{() -> viewModel.onLoginClick()}"
+                        android:text="@string/start"
+                        android:textColor="@color/colorText"
+                        android:visibility="@{viewModel.loginUser.loading ? View.GONE : View.VISIBLE}" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:padding="4dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:enabled="@{!viewModel.loginUser.loading}"
+                        android:focusable="true"
+                        android:onClick="@{() -> viewModel.onRegisterClick()}"
+                        android:text="@string/register" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </ScrollView>
+</layout>

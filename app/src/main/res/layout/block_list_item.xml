@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="block"
+            type="com.jr.census.models.BlockPropertiesCount" />
+        <variable
+            name="blockListener"
+            type="com.jr.census.view.callback.BlocksListListener" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        android:padding="15dp"
+        android:onClick="@{() -> blockListener.onItemClick(block)}"
+
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/labelBlockNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            tools:text="bloque"
+            android:text="@string/block"
+            />
+        <TextView
+            android:id="@+id/blockNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/labelBlockNumber"
+            android:layout_marginStart="5dp"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            tools:text="x"
+            android:text="@{Integer.toString(block.id)}"
+            />
+        <TextView
+            android:id="@+id/labelNumberProperties"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/blockNumber"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:text="@string/number_properties_text"
+            />
+        <TextView
+            tools:text="123"
+            android:text="@{Long.toString(block.propertiesCount)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/numberProperties"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/blockNumber"
+            app:layout_constraintLeft_toRightOf="@id/labelNumberProperties"
+            android:layout_marginStart="5dp"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
