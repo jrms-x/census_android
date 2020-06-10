@@ -12,7 +12,7 @@ class Property() : Parcelable {
 
     @SerializedName("id")
     @ColumnInfo(name = "id")
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     var id : Int = 0
     @SerializedName("block")
     @ColumnInfo(name="idBlock", index = true)

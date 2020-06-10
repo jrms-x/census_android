@@ -63,7 +63,7 @@
     <string name="register_user">Registrar</string>
     <string name="login">¿Ya tienes una cuenta? Inicia sesión</string>
     <string name="icon_generic">icon</string>
-    <string name="property_type_hint">TIPO DE INMUEBLE</string>
+    <string name="property_type_hint">Tipo de inmueble</string>
     <string name="btn_save">Guardar</string>
     <string name="round_src_item_picture">Round src item_picture</string>
     <string name="generic_picture_content_desc">picture</string>
@@ -74,5 +74,11 @@
     <string name="between">Entre</string>
     <string name="clientRating">Cal. cliente</string>
     <string name="picturesNotFound">No se encontraron fotos</string>
+    <string name="anomaly_type_hint">Anomalías</string>
+    <string name="charge_type_hint">Tipo de cobro</string>
+    <string name="outlet_type_hint">Tipo de toma</string>
+    <string name="meter_brand_type_hint">Marca del medidor</string>
+    <string name="meter_status_type_hint">Estado del medidor</string>
+    <string name="protections_type_hint">Tipo de proteccion</string>
 
 </resources>

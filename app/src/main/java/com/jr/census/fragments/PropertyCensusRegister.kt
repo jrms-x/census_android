@@ -23,11 +23,11 @@ class PropertyCensusRegister : Fragment() {
         val view = inflater.inflate(R.layout.fragment_property_census_register, container, false)
         view.viewPagerCensus.adapter = PropertyDetailFragmentAdapter(childFragmentManager, arrayOf(
             Pair(getString(R.string.land), PropertyLandFragment::class),
-            Pair(getString(R.string.take), PropertyTakeFragment::class),
-            Pair(getString(R.string.meter), PropertyMeterFragment::class),
-            Pair(getString(R.string.hidraulics), PropertyHydraulicsFragment::class),
-            Pair(getString(R.string.survey), PropertySurveyFragment::class),
-            Pair(getString(R.string.attachment), PropertyAttachmentFragment::class)
+            Pair(getString(R.string.take), PropertyOutletFragment::class),
+            Pair(getString(R.string.meter), PropertyMeterFragment::class)
+            //Pair(getString(R.string.hidraulics), PropertyHydraulicsFragment::class),
+            //Pair(getString(R.string.survey), PropertySurveyFragment::class),
+            //Pair(getString(R.string.attachment), PropertyAttachmentFragment::class)
         ))
         view.tabLayoutCensus.setupWithViewPager(view.viewPagerCensus)
         return view

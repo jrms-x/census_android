@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7e02b50451ac2e9830a074936f2d4c44",
+    "identityHash": "c13c89d3e04bab5df359e5d9667badd6",
     "entities": [
       {
         "tableName": "anomalies",
@@ -156,7 +156,7 @@
       },
       {
         "tableName": "properties",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `idBlock` INTEGER NOT NULL, `property` INTEGER, `derived` INTEGER, `name` TEXT, `street` TEXT, `suburb` TEXT, `bis` TEXT, `number` TEXT, `interior` TEXT, `building` TEXT, `floor` TEXT, `block_city` TEXT, `lot` TEXT, `customer_rating` TEXT, `location` TEXT, `serialNumber` TEXT, `typeService` INTEGER, FOREIGN KEY(`idBlock`) REFERENCES `blocks`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `idBlock` INTEGER NOT NULL, `property` INTEGER, `derived` INTEGER, `name` TEXT, `street` TEXT, `suburb` TEXT, `bis` TEXT, `number` TEXT, `interior` TEXT, `building` TEXT, `floor` TEXT, `block_city` TEXT, `lot` TEXT, `customer_rating` TEXT, `location` TEXT, `serialNumber` TEXT, `typeService` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`idBlock`) REFERENCES `blocks`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -271,7 +271,7 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
@@ -352,7 +352,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"7e02b50451ac2e9830a074936f2d4c44\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c13c89d3e04bab5df359e5d9667badd6\")"
     ]
   }
 }

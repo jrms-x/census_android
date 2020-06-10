@@ -18,7 +18,7 @@ abstract class AppDatabase: RoomDatabase() {
 
     abstract fun anomalies() : AnomaliesDAO
     abstract fun chargeTypes() : ChargeTypesDAO
-    abstract fun intakeTypes () : IntakeTypesDAO
+    abstract fun outletTypes () : OutletTypesDAO
     abstract fun meterBrands() : MeterBrandsDAO
     abstract fun meterStatus() : MeterStatusDAO
     abstract fun propertyTypes() : PropertyTypesDAO
@@ -59,7 +59,7 @@ abstract class AppDatabase: RoomDatabase() {
             chargeTypes().insert(chargeTypes)
         }
         if(intakeTypes != null){
-            intakeTypes().insert(intakeTypes)
+            outletTypes().insert(intakeTypes)
         }
         if(meterBrands != null){
             meterBrands().insert(meterBrands)

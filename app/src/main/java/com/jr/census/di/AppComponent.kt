@@ -22,7 +22,7 @@ interface AppComponent {
     fun inject(registerActivity: RegisterActivity)
     fun inject(propertyDetailFragment: PropertyDetailFragment)
     fun inject(propertyLandFragment: PropertyLandFragment)
-    fun inject(propertyTakeFragment: PropertyTakeFragment)
+    fun inject(propertyOutletFragment: PropertyOutletFragment)
     fun inject(propertyMeterFragment: PropertyMeterFragment)
     fun inject(propertyHydraulicsFragment: PropertyHydraulicsFragment)
     fun inject(propertySurveyFragment: PropertySurveyFragment)

@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:id="@+id/tabLayoutCensus"
             android:layout_height="wrap_content"
-            app:tabMode="scrollable"
+
             />
     </androidx.viewpager.widget.ViewPager>
 

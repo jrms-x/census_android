@@ -3,10 +3,7 @@ package com.jr.census.viewmodel.factories
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.jr.census.di.modules.BlocksRepository
-import com.jr.census.di.modules.LoginRepository
-import com.jr.census.di.modules.PropertiesRepository
-import com.jr.census.di.modules.RegisterRepository
+import com.jr.census.di.modules.*
 import com.jr.census.helpers.SharedPreferencesHelper
 import com.jr.census.viewmodel.MainViewModel
 import com.jr.census.viewmodel.PropertyDetailViewModel
@@ -21,6 +18,7 @@ class ViewModelFactory @Inject constructor  (val propertiesRepository: Propertie
                                              val blocksRepository: BlocksRepository,
                                              val loginRepository: LoginRepository,
                                              val registerRepository: RegisterRepository,
+                                             val catalogsRepository: CatalogsRepository,
                                              val application: Application,
                                              val sharedPreferencesHelper: SharedPreferencesHelper)
 
@@ -33,7 +31,7 @@ class ViewModelFactory @Inject constructor  (val propertiesRepository: Propertie
                     propertiesRepository, sharedPreferencesHelper) as T
             }
             modelClass.isAssignableFrom(PropertyDetailViewModel::class.java) -> {
-                PropertyDetailViewModel(application) as T
+                PropertyDetailViewModel(application, catalogsRepository) as T
             }
             modelClass.isAssignableFrom(UserViewModel::class.java) -> {
                 UserViewModel(application, loginRepository) as T

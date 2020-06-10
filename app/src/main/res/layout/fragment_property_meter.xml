@@ -1,14 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.PropertyMeterFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+        <variable
+            name="viewModel"
+            type="com.jr.census.viewmodel.PropertyDetailViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:fillViewport="true"
+        android:theme="@style/LoginTheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="todo ... medidor" />
+        android:background="@color/colorBackground">
 
-</FrameLayout>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/first_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/labelMeterBrand"
+                        android:text="@string/meter_brand_type_hint"
+                        />
+                    <Spinner
+                        android:layout_below="@id/labelMeterBrand"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:selectedItemPosition="@={viewModel.censusData.meterBrandPosition}"
+                        android:id="@+id/spinnerMeterBrand"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/labelMeterStatus"
+                        android:text="@string/meter_status_type_hint"
+                        />
+                    <Spinner
+                        android:layout_below="@id/labelMeterStatus"
+                        android:layout_width="match_parent"
+                        android:selectedItemPosition="@={viewModel.censusData.meterStatusPosition}"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinnerMeterStatus"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/labelProtectionsType"
+                        android:text="@string/protections_type_hint"
+                        />
+                    <Spinner
+                        android:layout_below="@id/labelProtectionsType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:selectedItemPosition="@={viewModel.censusData.protectionTypePosition}"
+                        android:id="@+id/spinnerProtectionType"/>
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.core.widget.NestedScrollView>
+</layout>

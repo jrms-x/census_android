@@ -4,4 +4,4 @@ import androidx.room.Entity
 
 
 @Entity(tableName = "anomalies")
-class Anomaly : CatalogTable()
+class Anomaly : Catalog()
