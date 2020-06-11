@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [BlocksRepository::class, CatalogsRepository::class, LoginRepository::class,
-    RegisterRepository::class, PropertiesRepository::class, ApplicationModule::class,
+    RegisterRepository::class, PropertiesRepository::class, PicturesRepository::class ,ApplicationModule::class,
     DatabaseModule::class, ApiModule::class, SharedPreferencesModule::class])
 interface AppComponent {
     fun inject(mainFragment: MainFragment)

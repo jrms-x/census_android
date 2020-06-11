@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c13c89d3e04bab5df359e5d9667badd6",
+    "identityHash": "73ba00f296d7c3bca4f392854264e30b",
     "entities": [
       {
         "tableName": "anomalies",
@@ -348,11 +348,94 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "pictures",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `idServer` TEXT, `title` TEXT, `subtitle` TEXT, `location` TEXT NOT NULL, `description` TEXT, `order` INTEGER NOT NULL, `propertyID` INTEGER NOT NULL, FOREIGN KEY(`propertyID`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idServer",
+            "columnName": "idServer",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "subtitle",
+            "columnName": "subtitle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location",
+            "columnName": "location",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "order",
+            "columnName": "order",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyID",
+            "columnName": "propertyID",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_pictures_propertyID",
+            "unique": false,
+            "columnNames": [
+              "propertyID"
+            ],
+            "createSql": "CREATE  INDEX `index_pictures_propertyID` ON `${TABLE_NAME}` (`propertyID`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "properties",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "propertyID"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c13c89d3e04bab5df359e5d9667badd6\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"73ba00f296d7c3bca4f392854264e30b\")"
     ]
   }
 }

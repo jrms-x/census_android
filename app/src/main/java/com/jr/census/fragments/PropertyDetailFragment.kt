@@ -7,11 +7,10 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -56,6 +55,8 @@ class PropertyDetailFragment : Fragment(){
     private val cameraRequest = 0x007
 
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -77,9 +78,9 @@ class PropertyDetailFragment : Fragment(){
             goToFragment(it, view.bottomNavigationPropertyDetail.selectedItemId)
             true
         }
-        view.toolbarPropertyDetail.setNavigationOnClickListener {
-            parentFragment?.childFragmentManager?.popBackStack()
-        }
+
+
+
         view.appbarLayoutPropertyDetail.addOnOffsetChangedListener(AppBarScrollChange { _, state ->
             if(state == AppBarScrollState.EXPANDED){
                 view.fabCameraProperty.show()
@@ -87,10 +88,12 @@ class PropertyDetailFragment : Fragment(){
                 view.fabCameraProperty.hide()
             }
         })
+        setHasOptionsMenu(true)
         return view
     }
 
     private fun goToFragment(item: MenuItem, currentId : Int) {
+
         if(item.itemId != currentId || childFragmentManager.fragments.size <= 0){
             val fragment : Fragment =  when(item.itemId){
 
@@ -118,6 +121,21 @@ class PropertyDetailFragment : Fragment(){
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.save_property_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.savePropertyOption){
+            //Todo save census to server
+            println(item)
+        }else if(item.itemId == android.R.id.home){
+            parentFragment?.childFragmentManager?.popBackStack()
+        }
+        return true
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (activity?.application as CensusApplication?)?.appComponent?.inject(this)
@@ -133,6 +151,7 @@ class PropertyDetailFragment : Fragment(){
             view?.toolbarPropertyDetail?.title = viewModel.title
         }
         fragmentBinding.viewModel = viewModel
+        (requireActivity() as AppCompatActivity).setSupportActionBar(view?.toolbarPropertyDetail)
 
 
     }
@@ -176,7 +195,11 @@ class PropertyDetailFragment : Fragment(){
                         default()
                         destination(viewModel.file!!)
                     }
-                    println(file)
+                    viewModel.viewModelScope.launch {
+                        withContext(Dispatchers.IO){
+                            viewModel.savePicture(file.toString())
+                        }
+                    }
                 }
             }
         }
@@ -192,6 +215,8 @@ class PropertyDetailFragment : Fragment(){
                 }
             }
     }
+
+
 
 
 }

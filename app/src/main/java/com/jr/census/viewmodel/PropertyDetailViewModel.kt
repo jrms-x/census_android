@@ -4,23 +4,37 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.jr.census.di.modules.CatalogsRepository
+import com.jr.census.di.modules.PicturesRepository
 import com.jr.census.models.*
+import com.jr.census.view.callback.ImageListListener
 import com.jr.census.viewmodel.models.CensusData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class PropertyDetailViewModel(application: Application,
-                              private val catalogsRepository : CatalogsRepository) : AndroidViewModel(application) {
+                              private val catalogsRepository : CatalogsRepository,
+                              private val picturesRepository: PicturesRepository) : AndroidViewModel(application) {
+
     lateinit var property : Property
     var callCameraFunction : (() -> Unit)? = null
+    var callActionMode : (() -> Unit)? = null
+    var callIsSelectMode : (() -> Boolean)? = null
+    var finishActionMode : (() -> Unit)? = null
+    var callEditPicture : ((Picture) -> Unit)? = null
     var file : File? = null
     lateinit var title : String
 
     //todo initialize census from server
-    var censusData  = CensusData()
+    val censusData  : CensusData by lazy {
+        CensusData()
+    }
 
-    val picturesLiveData : MutableLiveData<List<Picture>> by lazy {
-        MutableLiveData<List<Picture>>()
+    val picturesLiveData : LiveData<List<Picture>> by lazy {
+        picturesRepository.getPictures(property.id)
     }
 
     val chargeTypesLiveData : LiveData<List<ChargeType>> by lazy{
@@ -51,9 +65,32 @@ class PropertyDetailViewModel(application: Application,
         catalogsRepository.getAnomalies()
     }
 
+    val pictureListener: ImageListListener = object : ImageListListener{
+        override fun onSelectEdit(picture: Picture) {
+            callEditPicture?.invoke(picture)
+        }
+
+        override fun onSelectImage(picture: Picture) {
+
+        }
+
+        override fun startSelection() {
+            callActionMode?.invoke()
+        }
+
+        override fun isSelectMode(): Boolean {
+            return callIsSelectMode?.invoke() ?: false
+        }
+
+        override fun finishSelection() {
+            finishActionMode?.invoke()
+        }
+
+    }
 
 
-    init{ //only test
+
+    /*init{ //only test
 
         picturesLiveData.value = listOf(
             Picture("Perro",
@@ -70,9 +107,48 @@ class PropertyDetailViewModel(application: Application,
                 "Este es una imágen de un camaleón")
 
         )
-    }
+    }*/
 
     fun takePhoto(){
         callCameraFunction?.invoke()
+    }
+
+    fun savePicture(location: String) {
+        val order = (picturesRepository.getLastPicture(property.id)?.order ?: 0) + 1
+
+
+        val picture = Picture( location, order, property.id)
+        picturesRepository.insertPicture(picture)
+    }
+
+    fun deletePictures(selectedPictures: List<Picture>?) {
+        if(selectedPictures != null){
+            viewModelScope.launch {
+                withContext(Dispatchers.IO){
+                    //todo, delete from server
+                    picturesRepository.deletePictures(selectedPictures)
+                    launch {
+                        withContext(Dispatchers.IO){
+                            for(p in selectedPictures){
+                                val image = File(p.location)
+                                image.delete()
+                            }
+                        }
+                    }
+                }
+            }
+
+            finishActionMode?.invoke()
+        }
+
+    }
+
+    fun updatePicture(picture: Picture) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                picturesRepository.updatePicture(picture)
+            }
+
+        }
     }
 }

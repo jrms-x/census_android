@@ -5,6 +5,7 @@ import com.jr.census.models.Property
 import com.jr.census.service.room.AppDatabase
 import dagger.Module
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -22,7 +23,16 @@ class PropertiesRepository @Inject constructor (val database : AppDatabase, val 
     }
 
     suspend fun updateProperties(list: List<Property>,blockID: Int) = withContext(Dispatchers.IO){
-        database.properties().deleteProperties(blockID)
-        database.properties().insert(list)
+        for (property  in list){
+            launch {
+                val updatedNumber = database.properties().update(property)
+                if(updatedNumber <= 0){
+                    database.properties().insert(property)
+                }
+            }
+        }
+        database.properties().deleteProperties(blockID, list.map{it.id})
+
+
     }
 }

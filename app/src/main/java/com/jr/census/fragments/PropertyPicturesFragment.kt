@@ -1,28 +1,36 @@
 package com.jr.census.fragments
 
 import android.os.Bundle
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.appcompat.view.ActionMode
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import com.jr.census.R
 import com.jr.census.adapters.PicturesAdapter
 import com.jr.census.CensusApplication
+import com.jr.census.databinding.PictureDataLayoutBinding
+import com.jr.census.models.Picture
 import com.jr.census.viewmodel.PropertyDetailViewModel
 import com.jr.census.viewmodel.factories.ViewModelFactory
+import com.jr.census.viewmodel.models.PictureData
 import kotlinx.android.synthetic.main.fragment_property_pictures.view.*
 import javax.inject.Inject
 
 
-class PropertyPicturesFragment : Fragment() {
+class PropertyPicturesFragment : Fragment(){
     @Inject
     lateinit var viewModelFactory : ViewModelFactory
 
     lateinit var viewModel : PropertyDetailViewModel
+
+    private var actionMode : ActionMode? = null
 
 
     override fun onCreateView(
@@ -30,10 +38,37 @@ class PropertyPicturesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_property_pictures, container, false)
-        view.recyclerPictures.layoutManager = LinearLayoutManager(requireContext())
-        view.recyclerPictures.adapter = PicturesAdapter(requireContext())
-        return view
+        return inflater.inflate(R.layout.fragment_property_pictures, container, false)
+
+    }
+
+    private val callbackActionMode = object : ActionMode.Callback {
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+            if(item?.itemId == R.id.deletePictures){
+                MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.deletePicture).setMessage(R.string.confirmDeletePictures)
+                    .setNegativeButton(R.string.cancel){ _, _ ->
+
+                    }.setPositiveButton(R.string.accept){ _, _ ->
+                        viewModel.deletePictures((view?.recyclerPictures?.adapter as PicturesAdapter?)?.getAllSelected())
+                    }.show()
+
+            }
+            return true
+        }
+
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            mode?.menuInflater?.inflate(R.menu.picture_action_menu, menu)
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return false
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+            (view?.recyclerPictures?.adapter as PicturesAdapter?)?.deselectAll()
+            actionMode = null
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -41,6 +76,9 @@ class PropertyPicturesFragment : Fragment() {
         (requireActivity().application as CensusApplication).appComponent.inject(this)
         viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
             .get(PropertyDetailViewModel::class.java)
+
+        view?.recyclerPictures?.layoutManager = LinearLayoutManager(requireContext())
+        view?.recyclerPictures?.adapter = PicturesAdapter(requireContext(), viewModel.pictureListener ,viewModel.viewModelScope)
 
         viewModel.picturesLiveData.observe(viewLifecycleOwner, Observer { list ->
             (view?.recyclerPictures?.adapter as PicturesAdapter?)?.setNewList(list)
@@ -51,6 +89,38 @@ class PropertyPicturesFragment : Fragment() {
             }
         })
 
+        viewModel.callIsSelectMode = {
+            actionMode != null
+        }
+
+        viewModel.callActionMode = {
+            actionMode = (activity as AppCompatActivity).startSupportActionMode(callbackActionMode)
+        }
+
+        viewModel.finishActionMode = {
+            actionMode?.finish()
+            actionMode = null
+        }
+
+        viewModel.callEditPicture = {
+            editPictureData(it)
+        }
+
+    }
+
+    private fun editPictureData(picture: Picture) {
+        val binding : PictureDataLayoutBinding = DataBindingUtil.inflate(layoutInflater, R.layout.picture_data_layout, null, false)
+        val pictureData = PictureData(picture.title, picture.subtitle, picture.description)
+        binding.model = pictureData
+        MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.addPictureInformation).setView(binding.root)
+            .setNegativeButton(R.string.cancel){ _, _ ->
+
+            }.setPositiveButton(R.string.accept){ _, _ ->
+                picture.title = pictureData.getTitle()?.trim()
+                picture.subtitle = pictureData.getSubtitle()?.trim()
+                picture.description = pictureData.getDescription()?.trim()
+                viewModel.updatePicture(picture)
+            }.show()
 
     }
 

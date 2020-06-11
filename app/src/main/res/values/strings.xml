@@ -80,5 +80,15 @@
     <string name="meter_brand_type_hint">Marca del medidor</string>
     <string name="meter_status_type_hint">Estado del medidor</string>
     <string name="protections_type_hint">Tipo de proteccion</string>
+    <string name="withoutTitle">Sin titulo</string>
+    <string name="withoutSubtitle">-</string>
+    <string name="withoutDescription">No hay descripción</string>
+    <string name="description">Descripción</string>
+    <string name="subtitle">Subtitulo</string>
+    <string name="deletePicture">Eliminar selección de imágenes</string>
+    <string name="confirmDeletePictures">¿Desea eliminar las imágenes seleccionadas?</string>
+    <string name="addPictureInformation">Información imágen</string>
+    <string name="title">Título</string>
+    <string name="savePropertyCensus">Guardar datos censo</string>
 
 </resources>

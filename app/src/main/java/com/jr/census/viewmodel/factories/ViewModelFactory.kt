@@ -14,13 +14,14 @@ import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
 
-class ViewModelFactory @Inject constructor  (val propertiesRepository: PropertiesRepository,
-                                             val blocksRepository: BlocksRepository,
-                                             val loginRepository: LoginRepository,
-                                             val registerRepository: RegisterRepository,
-                                             val catalogsRepository: CatalogsRepository,
-                                             val application: Application,
-                                             val sharedPreferencesHelper: SharedPreferencesHelper)
+class ViewModelFactory @Inject constructor  (private val propertiesRepository: PropertiesRepository,
+                                             private val blocksRepository: BlocksRepository,
+                                             private val loginRepository: LoginRepository,
+                                             private val registerRepository: RegisterRepository,
+                                             private val catalogsRepository: CatalogsRepository,
+                                             private val picturesRepository: PicturesRepository,
+                                             private val application: Application,
+                                             private val sharedPreferencesHelper: SharedPreferencesHelper)
 
     : ViewModelProvider.AndroidViewModelFactory(application) {
 
@@ -31,7 +32,7 @@ class ViewModelFactory @Inject constructor  (val propertiesRepository: Propertie
                     propertiesRepository, sharedPreferencesHelper) as T
             }
             modelClass.isAssignableFrom(PropertyDetailViewModel::class.java) -> {
-                PropertyDetailViewModel(application, catalogsRepository) as T
+                PropertyDetailViewModel(application, catalogsRepository, picturesRepository) as T
             }
             modelClass.isAssignableFrom(UserViewModel::class.java) -> {
                 UserViewModel(application, loginRepository) as T

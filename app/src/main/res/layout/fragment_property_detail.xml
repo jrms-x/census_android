@@ -27,7 +27,9 @@
                app:navigationIcon="@drawable/arrow_back"
                android:background="@color/colorAccent"
                app:layout_scrollFlags="scroll"
+               app:menu="@menu/save_property_menu"
                app:titleTextColor="@android:color/white"
+               style="@style/Widget.MaterialComponents.Toolbar.Primary"
                />
        </com.google.android.material.appbar.AppBarLayout>
 

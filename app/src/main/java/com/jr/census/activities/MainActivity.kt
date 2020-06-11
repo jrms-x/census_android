@@ -3,6 +3,8 @@ package com.jr.census.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
 import com.jr.census.R
 import com.jr.census.CensusApplication
 import com.jr.census.di.modules.CatalogsRepository
@@ -59,6 +61,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
 
 
 
