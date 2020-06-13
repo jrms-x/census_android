@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "73ba00f296d7c3bca4f392854264e30b",
+    "identityHash": "adb02b55c0ec41a21bde7f41ab99c87c",
     "entities": [
       {
         "tableName": "anomalies",
@@ -156,7 +156,7 @@
       },
       {
         "tableName": "properties",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `idBlock` INTEGER NOT NULL, `property` INTEGER, `derived` INTEGER, `name` TEXT, `street` TEXT, `suburb` TEXT, `bis` TEXT, `number` TEXT, `interior` TEXT, `building` TEXT, `floor` TEXT, `block_city` TEXT, `lot` TEXT, `customer_rating` TEXT, `location` TEXT, `serialNumber` TEXT, `typeService` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`idBlock`) REFERENCES `blocks`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `idBlock` INTEGER NOT NULL, `property` INTEGER, `derived` INTEGER, `name` TEXT, `street` TEXT, `suburb` TEXT, `bis` TEXT, `number` TEXT, `interior` TEXT, `building` TEXT, `floor` TEXT, `block_city` TEXT, `lot` TEXT, `customer_rating` TEXT, `location` TEXT, `serialNumber` TEXT, `typeService` INTEGER, `latitude` REAL, `longitude` REAL, PRIMARY KEY(`id`), FOREIGN KEY(`idBlock`) REFERENCES `blocks`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -265,6 +265,18 @@
             "columnName": "typeService",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -351,7 +363,7 @@
       },
       {
         "tableName": "pictures",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `idServer` TEXT, `title` TEXT, `subtitle` TEXT, `location` TEXT NOT NULL, `description` TEXT, `order` INTEGER NOT NULL, `propertyID` INTEGER NOT NULL, FOREIGN KEY(`propertyID`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `idServer` TEXT, `title` TEXT, `subtitle` TEXT, `location` TEXT NOT NULL, `description` TEXT, `order` INTEGER NOT NULL, `propertyID` INTEGER NOT NULL, `year` INTEGER NOT NULL, FOREIGN KEY(`propertyID`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -400,6 +412,12 @@
             "columnName": "propertyID",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "year",
+            "columnName": "year",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -431,11 +449,112 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "census_data",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_anomaly` INTEGER NOT NULL, `id_meter_status` INTEGER NOT NULL, `id_meter_brands` INTEGER NOT NULL, `id_type_charges` INTEGER NOT NULL, `id_type_properties` INTEGER NOT NULL, `id_type_protections` INTEGER NOT NULL, `id_type_outlet` INTEGER NOT NULL, `id_property` INTEGER NOT NULL, `finished_census` INTEGER NOT NULL, `year` INTEGER NOT NULL, FOREIGN KEY(`id_property`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idAnomaly",
+            "columnName": "id_anomaly",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idMeterStatus",
+            "columnName": "id_meter_status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idMeterBrands",
+            "columnName": "id_meter_brands",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idTypesCharge",
+            "columnName": "id_type_charges",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idTypesProperty",
+            "columnName": "id_type_properties",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idTypesProtections",
+            "columnName": "id_type_protections",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idTypesOutlet",
+            "columnName": "id_type_outlet",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idProperty",
+            "columnName": "id_property",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "finished",
+            "columnName": "finished_census",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "year",
+            "columnName": "year",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_census_data_id_property",
+            "unique": false,
+            "columnNames": [
+              "id_property"
+            ],
+            "createSql": "CREATE  INDEX `index_census_data_id_property` ON `${TABLE_NAME}` (`id_property`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "properties",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_property"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"73ba00f296d7c3bca4f392854264e30b\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"adb02b55c0ec41a21bde7f41ab99c87c\")"
     ]
   }
 }

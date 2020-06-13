@@ -32,7 +32,7 @@ class ViewModelFactory @Inject constructor  (private val propertiesRepository: P
                     propertiesRepository, sharedPreferencesHelper) as T
             }
             modelClass.isAssignableFrom(PropertyDetailViewModel::class.java) -> {
-                PropertyDetailViewModel(application, catalogsRepository, picturesRepository) as T
+                PropertyDetailViewModel(application, propertiesRepository  ,catalogsRepository, picturesRepository) as T
             }
             modelClass.isAssignableFrom(UserViewModel::class.java) -> {
                 UserViewModel(application, loginRepository) as T

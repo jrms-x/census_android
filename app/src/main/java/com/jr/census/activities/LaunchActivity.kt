@@ -33,7 +33,7 @@ class LaunchActivity : AppCompatActivity(), OnResultFromWebService<CatalogsRespo
         catalogsRepository.getCatalogs(catalogsCallback)
     }
 
-    override fun onSuccess(result: CatalogsResponse?) {
+    override fun onSuccess(result: CatalogsResponse?, statusCode : Int) {
         if(result != null){
             MainScope().launch {
                 catalogsRepository.saveCatalogs(result)

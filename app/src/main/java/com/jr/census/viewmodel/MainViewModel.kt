@@ -62,7 +62,7 @@ class MainViewModel constructor(
 
     private val onResultProperty: OnResultFromWebService<List<Property>> =
         object : OnResultFromWebService<List<Property>> {
-            override fun onSuccess(result: List<Property>?) {
+            override fun onSuccess(result: List<Property>?, statusCode : Int) {
                 propertiesListModel.setLoading(false)
                 if (result == null) {
                     viewModelScope.launch {

@@ -50,7 +50,7 @@ class CensusData : BaseObservable() {
 
     @Bindable
     fun setAnomalyPosition(value : Int){
-        if(value != anomalyPosition){
+        if(value != anomalyPosition && value >= 0){
             anomalyPosition = value
             notifyPropertyChanged(BR.anomalyPosition)
         }
@@ -58,7 +58,7 @@ class CensusData : BaseObservable() {
 
     @Bindable
     fun setMeterBrandPosition(value : Int){
-        if(value != meterBrandPosition){
+        if(value != meterBrandPosition && value >= 0){
             meterBrandPosition = value
             notifyPropertyChanged(BR.meterBrandPosition)
         }
@@ -66,7 +66,7 @@ class CensusData : BaseObservable() {
 
     @Bindable
     fun setMeterStatusPosition(value : Int){
-        if(value != meterStatusPosition){
+        if(value != meterStatusPosition && value >= 0){
             meterStatusPosition = value
             notifyPropertyChanged(BR.meterStatusPosition)
         }
@@ -74,7 +74,7 @@ class CensusData : BaseObservable() {
 
     @Bindable
     fun setProtectionTypePosition(value : Int){
-        if(value != protectionTypePosition){
+        if(value != protectionTypePosition && value >= 0){
             protectionTypePosition = value
             notifyPropertyChanged(BR.protectionTypePosition)
         }
@@ -82,7 +82,7 @@ class CensusData : BaseObservable() {
 
     @Bindable
     fun setPropertyTypePosition(value : Int){
-        if(value != propertyTypePosition){
+        if(value != propertyTypePosition && value >= 0){
             propertyTypePosition = value
             notifyPropertyChanged(BR.propertyTypePosition)
         }
@@ -90,7 +90,7 @@ class CensusData : BaseObservable() {
 
     @Bindable
     fun setChargeTypePosition(value : Int){
-        if(value != chargeTypePosition){
+        if(value != chargeTypePosition && value >= 0){
             chargeTypePosition = value
             notifyPropertyChanged(BR.chargeTypePosition)
         }
@@ -98,7 +98,7 @@ class CensusData : BaseObservable() {
 
     @Bindable
     fun setOutletTypePosition(value : Int){
-        if(value != outletTypePosition){
+        if(value != outletTypePosition && value >= 0){
             outletTypePosition = value
             notifyPropertyChanged(BR.outletTypePosition)
         }

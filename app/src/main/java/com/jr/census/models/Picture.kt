@@ -2,6 +2,7 @@ package com.jr.census.models
 
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 @Entity(tableName = "pictures", foreignKeys = [ForeignKey(entity = Property::class, parentColumns = arrayOf("id"),
 childColumns = arrayOf("propertyID"), onDelete = ForeignKey.CASCADE)])
@@ -14,8 +15,9 @@ class Picture (){
         this.propertyID = propertyID
     }
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
     var id : Int = 0
-    @SerializedName("idServer")
+    @SerializedName("id")
     @ColumnInfo(name = "idServer")
     var idServer : String? = null
     @SerializedName("title")
@@ -26,7 +28,7 @@ class Picture (){
     var subtitle : String? = null
     @SerializedName("location")
     @ColumnInfo(name = "location")
-    lateinit var location : String
+    var location : String = ""
     @SerializedName("description")
     @ColumnInfo(name = "description")
     var description : String? = null
@@ -36,5 +38,11 @@ class Picture (){
     @SerializedName("propertyID")
     @ColumnInfo(name = "propertyID", index = true)
     var propertyID : Int = 0
+    @SerializedName("blob_identifier")
+    @Ignore
+    var blobIdentifier : String? = null
+    @SerializedName("year")
+    var year : Int = Calendar.getInstance().get(Calendar.YEAR)
+
 
 }

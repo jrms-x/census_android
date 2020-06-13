@@ -41,12 +41,17 @@ class ApiModule @Inject constructor(
     }
 
 
+
     fun getAllCatalogs(): Call<CatalogsResponse> {
         return catalogs.getAll(getHeaderToken())
     }
 
     fun getProperties(blockID: Int): Call<List<Property>> {
         return properties.getList(blockID, getHeaderToken())
+    }
+
+    fun saveCensusData(propertyCensusInformation: PropertyCensusInformation): Call<ServiceExecutionResponse<Any>>{
+        return properties.sendCensusData(getHeaderToken(), propertyCensusInformation)
     }
 
     fun getLogin(login: Login): Call<LoginResponse> {

@@ -17,13 +17,13 @@ class ResponseServiceCallback<T>(private val onResult: OnResultFromWebService<T>
     }
 
     override fun onResponse(call: Call<T>, response: Response<T>) {
-        if(response.code() != 200){
+        if(response.code() == 401){
             val intent = Intent(activity, LoginActivity::class.java)
             activity?.startActivity(intent)
             activity?.finish()
 
         }else{
-            onResult.onSuccess(response.body())
+            onResult.onSuccess(response.body(), response.code())
 
         }
     }

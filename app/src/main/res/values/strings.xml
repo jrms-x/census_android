@@ -90,5 +90,10 @@
     <string name="addPictureInformation">Información imágen</string>
     <string name="title">Título</string>
     <string name="savePropertyCensus">Guardar datos censo</string>
+    <string name="savedCensusData">Datos de censo guardados</string>
+    <string name="confirmSaveCensus">Confirmación de datos</string>
+    <string name="saveCensusMessage">¿Desea guardar los datos del censo? No se podrá modificar información, y las fotos que se hayan tomado que tengan un título especificado, serán guardadas en el servidor</string>
+    <string name="censusAlreadySaved">Datos de censo han sido guardados</string>
+    <string name="errorSavingCensusData">Error al guardar datos de censo, verifique conexión a internet</string>
 
 </resources>

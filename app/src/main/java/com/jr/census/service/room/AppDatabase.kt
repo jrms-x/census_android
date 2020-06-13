@@ -13,7 +13,8 @@ import kotlinx.coroutines.withContext
 
 
 @Database(entities = [Anomaly::class, Block::class ,ChargeType::class, OutletType::class, MeterBrand::class,
-MeterStatus::class, Property::class ,PropertyType::class, ProtectionType::class, Picture::class], version = 1)
+MeterStatus::class, Property::class ,PropertyType::class,
+    ProtectionType::class, Picture::class, PropertyCensusInformation::class], version = 1)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun anomalies() : AnomaliesDAO
@@ -26,6 +27,7 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun properties() : PropertiesDAO
     abstract fun blocks() : BlocksDAO
     abstract fun pictures() : PicturesDAO
+    abstract fun propertyCensus() : PropertyCensusInformationDAO
 
     companion object{
         @Volatile

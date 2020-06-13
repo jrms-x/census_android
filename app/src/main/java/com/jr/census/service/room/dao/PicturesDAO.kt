@@ -15,7 +15,7 @@ interface PicturesDAO {
     @Update
     fun updatePictures(pictures: List<Picture>)
 
-    @Query("select * from pictures where propertyID = :idProperty order by `order`")
+    @Query("select * from pictures where propertyID = :idProperty order by `order`, year")
     fun getPictures(idProperty : Int) : LiveData<List<Picture>>
 
     @Delete
@@ -24,6 +24,6 @@ interface PicturesDAO {
     @Delete
     fun deletePictures(pictures : List<Picture>)
 
-    @Query("select * from pictures where propertyID = :idProperty order by `order` desc limit 1")
+    @Query("select * from pictures where propertyID = :idProperty order by `order`, year desc limit 1")
     fun getLastPicture(idProperty: Int): Picture?
 }

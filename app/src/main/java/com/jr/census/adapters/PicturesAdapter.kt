@@ -57,26 +57,26 @@ class PicturesAdapter(private val context : Context,
         holder.binding.setPicture(list[position])
         holder.binding.listener = imageListener
         if(sparseSelected[position] == true){
-            setSelectedImageColor(holder.binding.root.picture)
+            setSelectedImageColor(holder.binding.root.imageViewBigPicture)
         }else{
-            holder.binding.root.picture.colorFilter = null
+            holder.binding.root.imageViewBigPicture.colorFilter = null
         }
-        holder.binding.root.picture.setOnLongClickListener{
+        holder.binding.root.imageViewBigPicture.setOnLongClickListener{
             if(!imageListener.isSelectMode()){
                 imageListener.startSelection()
             }
-            setSelectedImageColor(holder.binding.root.picture)
+            setSelectedImageColor(holder.binding.root.imageViewBigPicture)
             sparseSelected[position] = true
 
             true
         }
-        holder.binding.root.picture.setOnClickListener {
+        holder.binding.root.imageViewBigPicture.setOnClickListener {
             if(imageListener.isSelectMode()){
                 if(sparseSelected[position] != true){
-                    setSelectedImageColor(holder.binding.root.picture)
+                    setSelectedImageColor(holder.binding.root.imageViewBigPicture)
                     sparseSelected[position] = true
                 }else{
-                    holder.binding.root.picture.colorFilter = null
+                    holder.binding.root.imageViewBigPicture.colorFilter = null
                     sparseSelected.remove(position)
                 }
                 if(sparseSelected.size() <= 0){
@@ -99,7 +99,7 @@ class PicturesAdapter(private val context : Context,
                     Uri.parse(list[position].location)
                 }
             }
-            Picasso.get().load(location).into(holder.binding.picture)
+            Picasso.get().load(location).into(holder.binding.imageViewBigPicture)
             Picasso.get().load(location).into(holder.binding.pictureSmall)
         }
 

@@ -8,6 +8,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
@@ -15,9 +16,11 @@ import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import com.jr.census.R
 import com.jr.census.CensusApplication
+import com.jr.census.adapters.CatalogArrayAdapter
 import com.jr.census.databinding.FragmentPropertyDetailBinding
 import com.jr.census.helpers.AppBarScrollChange
 import com.jr.census.helpers.AppBarScrollState
@@ -30,6 +33,7 @@ import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.default
 import id.zelory.compressor.constraint.destination
 import kotlinx.android.synthetic.main.fragment_property_detail.view.*
+import kotlinx.android.synthetic.main.fragment_property_land.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -128,8 +132,18 @@ class PropertyDetailFragment : Fragment(){
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == R.id.savePropertyOption){
-            //Todo save census to server
-            println(item)
+            if(viewModel.property.census != null){
+                Toast.makeText(context, R.string.censusAlreadySaved, Toast.LENGTH_SHORT).show()
+            }else{
+                MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.confirmSaveCensus)
+                    .setMessage(R.string.saveCensusMessage)
+                    .setPositiveButton(R.string.accept){ _, _ ->
+                        viewModel.saveCensusData(requireActivity())
+                    }.setNegativeButton(R.string.cancel){ _, _ ->
+
+                    }.show()
+            }
+
         }else if(item.itemId == android.R.id.home){
             parentFragment?.childFragmentManager?.popBackStack()
         }
@@ -141,7 +155,9 @@ class PropertyDetailFragment : Fragment(){
         (activity?.application as CensusApplication?)?.appComponent?.inject(this)
         viewModelParent = ViewModelProvider(requireParentFragment(), viewModelFactory).get(MainViewModel::class.java)
         viewModel = ViewModelProvider(this, viewModelFactory).get(PropertyDetailViewModel::class.java)
+        fragmentBinding.viewModel = viewModel
         viewModel.property = property
+        viewModel.loadCensusData()
         viewModel.callCameraFunction = {
             callCamera()
         }
@@ -150,9 +166,39 @@ class PropertyDetailFragment : Fragment(){
         }else{
             view?.toolbarPropertyDetail?.title = viewModel.title
         }
-        fragmentBinding.viewModel = viewModel
+
         (requireActivity() as AppCompatActivity).setSupportActionBar(view?.toolbarPropertyDetail)
 
+
+        viewModel.anomaliesLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            viewModel.setAnomalySelection(it)
+        })
+
+        viewModel.protectionTypesLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            viewModel.setProtectionTypeSelection(it)
+        })
+
+
+
+        viewModel.propertyTypesLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            viewModel.setPropertyTypeSelection(it)
+        })
+
+        viewModel.outletLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            viewModel.setOutletTypeSelection(it)
+        })
+
+        viewModel.meterStatusLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            viewModel.setMeterStatusSelection(it)
+        })
+
+        viewModel.meterBrandsLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            viewModel.setMeterBrandsSelection(it)
+        })
+
+        viewModel.chargeTypesLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            viewModel.setChargeTypeSelection(it)
+        })
 
     }
 
@@ -204,6 +250,8 @@ class PropertyDetailFragment : Fragment(){
             }
         }
     }
+
+
 
     companion object {
 

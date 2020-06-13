@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     private val onCatalogsResult : OnResultFromWebService<CatalogsResponse> =
         object : OnResultFromWebService<CatalogsResponse>{
-            override fun onSuccess(result: CatalogsResponse?) {
+            override fun onSuccess(result: CatalogsResponse?, statusCode : Int) {
                 if(result != null){
                     MainScope().launch {
                         catalogsRepository.saveCatalogs(result)

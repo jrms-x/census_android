@@ -124,5 +124,4 @@ class PropertyPicturesFragment : Fragment(){
 
     }
 
-
 }
