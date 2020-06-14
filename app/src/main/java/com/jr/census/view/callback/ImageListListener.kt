@@ -9,4 +9,5 @@ interface ImageListListener {
     fun startSelection()
     fun isSelectMode() : Boolean
     fun finishSelection()
+    fun canShowLoading() : Boolean
 }

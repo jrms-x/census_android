@@ -3,9 +3,12 @@ package com.jr.census.adapters
 import android.content.Context
 import android.graphics.PorterDuff
 import android.net.Uri
+import android.text.TextUtils
 import android.util.SparseArray
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.util.set
@@ -15,6 +18,8 @@ import com.jr.census.R
 import com.jr.census.databinding.ItemPicturesBinding
 import com.jr.census.models.Picture
 import com.jr.census.view.callback.ImageListListener
+import com.jr.census.viewmodel.models.SYNC
+import com.jr.census.viewmodel.models.SYNCED
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_pictures.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -29,14 +34,32 @@ class PicturesAdapter(private val context : Context,
 
     private var list : List<Picture> = listOf()
     private var sparseSelected : SparseArray<Boolean> = SparseArray()
+    private val animation = AnimationUtils.loadAnimation(context, R.anim.rotate_sync_animation)
 
     fun setNewList(list : List<Picture>){
         this.list = list
         notifyDataSetChanged()
     }
 
+    fun changeItem(index : Int){
+        notifyItemChanged(index)
+    }
+
     fun deselectAll(){
         sparseSelected.clear()
+        notifyDataSetChanged()
+    }
+
+    fun reloadList(picture: Picture?){
+        if(picture != null)
+        {
+            scope.launch {
+                val index = withContext(Dispatchers.Default){list.indexOfFirst { picture.idLocal == it.idLocal }}
+                if(index >= 0){
+                    list[index].setSynchronized(picture.pictureSynchronized.getStatus())
+                }
+            }
+        }
         notifyDataSetChanged()
     }
 
@@ -90,6 +113,31 @@ class PicturesAdapter(private val context : Context,
         holder.binding.root.pictureSmall.setOnClickListener {
             imageListener.onSelectImage(list[position])
         }
+
+        if(imageListener.canShowLoading() && list[position].isImageAvailableToUpload()){
+            holder.binding.root.pictureStatus.visibility = View.VISIBLE
+            if(list[position].status < 0){
+                list[position].setSynchronized(
+                    if (TextUtils.isEmpty(list[position].idServer?.trim())) {
+                        SYNC
+                    } else {
+                        SYNCED
+                    }
+                )
+            }else{
+                list[position].setSynchronized(list[position].status)
+            }
+            holder.binding.pictureStatus.setImageResource(list[position].pictureSynchronized.getSyncDrawable())
+
+            if(list[position].pictureSynchronized.getStatus() == SYNC){
+                holder.binding.pictureStatus.startAnimation(animation)
+            }else{
+                holder.binding.pictureStatus.clearAnimation()
+            }
+        }else{
+            holder.binding.root.pictureStatus.visibility = View.GONE
+        }
+
         scope.launch {
             val location : Uri = withContext(Dispatchers.IO){
                 val file = File(list[position].location)

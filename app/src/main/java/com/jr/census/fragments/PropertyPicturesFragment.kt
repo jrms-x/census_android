@@ -21,6 +21,8 @@ import com.jr.census.viewmodel.PropertyDetailViewModel
 import com.jr.census.viewmodel.factories.ViewModelFactory
 import com.jr.census.viewmodel.models.PictureData
 import kotlinx.android.synthetic.main.fragment_property_pictures.view.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -49,7 +51,7 @@ class PropertyPicturesFragment : Fragment(){
                     .setNegativeButton(R.string.cancel){ _, _ ->
 
                     }.setPositiveButton(R.string.accept){ _, _ ->
-                        viewModel.deletePictures((view?.recyclerPictures?.adapter as PicturesAdapter?)?.getAllSelected())
+                        viewModel.deletePictures(requireActivity(),(view?.recyclerPictures?.adapter as PicturesAdapter?)?.getAllSelected())
                     }.show()
 
             }
@@ -74,7 +76,7 @@ class PropertyPicturesFragment : Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity().application as CensusApplication).appComponent.inject(this)
-        viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
+        viewModel = ViewModelProvider((requireActivity() as AppCompatActivity), viewModelFactory)
             .get(PropertyDetailViewModel::class.java)
 
         view?.recyclerPictures?.layoutManager = LinearLayoutManager(requireContext())
@@ -106,6 +108,14 @@ class PropertyPicturesFragment : Fragment(){
             editPictureData(it)
         }
 
+        viewModel.callRefreshItem = {
+            (view?.recyclerPictures?.adapter as PicturesAdapter?)?.changeItem(it)
+        }
+
+        viewModel.callReloadList = {
+            (view?.recyclerPictures?.adapter as PicturesAdapter?)?.reloadList(it)
+        }
+
     }
 
     private fun editPictureData(picture: Picture) {
@@ -120,6 +130,12 @@ class PropertyPicturesFragment : Fragment(){
                 picture.subtitle = pictureData.getSubtitle()?.trim()
                 picture.description = pictureData.getDescription()?.trim()
                 viewModel.updatePicture(picture)
+                if(picture.isImageAvailableToUpload()){
+                    MainScope().launch {
+                        viewModel.uploadPicture(picture, requireActivity(), reloadList = false)
+                    }
+
+                }
             }.show()
 
     }

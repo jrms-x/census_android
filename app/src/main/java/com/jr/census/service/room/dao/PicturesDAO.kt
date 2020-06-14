@@ -26,4 +26,7 @@ interface PicturesDAO {
 
     @Query("select * from pictures where propertyID = :idProperty order by `order`, year desc limit 1")
     fun getLastPicture(idProperty: Int): Picture?
+
+    @Query("select * from pictures where id = :id limit 1")
+    fun getPicture(id: Int): Picture?
 }

@@ -14,4 +14,7 @@ interface PropertyService {
     @POST("censusData/")
     fun sendCensusData(@Header("Authorization") authorization :
                        String, @Body censusData : PropertyCensusInformation) : Call<ServiceExecutionResponse<Any>>
+
+    @PUT("properties")
+    fun updateProperty(@Header("Authorization")token: String, @Body property: Property): Call<ServiceExecutionResponse<Any?>?>
 }

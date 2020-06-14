@@ -95,5 +95,8 @@
     <string name="saveCensusMessage">¿Desea guardar los datos del censo? No se podrá modificar información, y las fotos que se hayan tomado que tengan un título especificado, serán guardadas en el servidor</string>
     <string name="censusAlreadySaved">Datos de censo han sido guardados</string>
     <string name="errorSavingCensusData">Error al guardar datos de censo, verifique conexión a internet</string>
+    <string name="syncStatus">Estado de la sincronización</string>
+    <string name="errorDeletingPicture">Error al eliminar imágen</string>
+    <string name="errorDeletingPictureServer">Error al eliminar imágen, verifique conexión a internet</string>
 
 </resources>

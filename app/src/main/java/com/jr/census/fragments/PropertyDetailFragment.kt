@@ -154,8 +154,9 @@ class PropertyDetailFragment : Fragment(){
         super.onActivityCreated(savedInstanceState)
         (activity?.application as CensusApplication?)?.appComponent?.inject(this)
         viewModelParent = ViewModelProvider(requireParentFragment(), viewModelFactory).get(MainViewModel::class.java)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(PropertyDetailViewModel::class.java)
+        viewModel = ViewModelProvider((requireActivity() as AppCompatActivity), viewModelFactory).get(PropertyDetailViewModel::class.java)
         fragmentBinding.viewModel = viewModel
+        viewModel.startSync = true
         viewModel.property = property
         viewModel.loadCensusData()
         viewModel.callCameraFunction = {
@@ -200,6 +201,10 @@ class PropertyDetailFragment : Fragment(){
             viewModel.setChargeTypeSelection(it)
         })
 
+        viewModel.picturesLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            viewModel.synchronizePictures(requireActivity())
+        })
+
     }
 
     private fun callCamera() {
@@ -242,9 +247,8 @@ class PropertyDetailFragment : Fragment(){
                         destination(viewModel.file!!)
                     }
                     viewModel.viewModelScope.launch {
-                        withContext(Dispatchers.IO){
-                            viewModel.savePicture(file.toString())
-                        }
+                        viewModel.savePicture(file.toString())
+
                     }
                 }
             }
@@ -263,8 +267,4 @@ class PropertyDetailFragment : Fragment(){
                 }
             }
     }
-
-
-
-
 }

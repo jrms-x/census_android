@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 
@@ -39,7 +40,7 @@ class PropertyInformationFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity().application as CensusApplication).appComponent.inject(this)
-        viewModel = ViewModelProvider(requireParentFragment().requireParentFragment(), viewModelFactory)
+        viewModel = ViewModelProvider((requireActivity() as AppCompatActivity), viewModelFactory)
             .get(PropertyDetailViewModel::class.java)
         binding.viewModel = viewModel
     }

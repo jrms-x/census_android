@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "adb02b55c0ec41a21bde7f41ab99c87c",
+    "identityHash": "92b49f9970e327b04d633c047a1b16c2",
     "entities": [
       {
         "tableName": "anomalies",
@@ -363,7 +363,7 @@
       },
       {
         "tableName": "pictures",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `idServer` TEXT, `title` TEXT, `subtitle` TEXT, `location` TEXT NOT NULL, `description` TEXT, `order` INTEGER NOT NULL, `propertyID` INTEGER NOT NULL, `year` INTEGER NOT NULL, FOREIGN KEY(`propertyID`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `idServer` TEXT, `title` TEXT, `subtitle` TEXT, `location` TEXT NOT NULL, `description` TEXT, `order` INTEGER NOT NULL, `propertyID` INTEGER NOT NULL, `blob_identifier` TEXT, `year` INTEGER NOT NULL, `status` INTEGER NOT NULL, FOREIGN KEY(`propertyID`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -414,8 +414,20 @@
             "notNull": true
           },
           {
+            "fieldPath": "blobIdentifier",
+            "columnName": "blob_identifier",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "year",
             "columnName": "year",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -554,7 +566,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"adb02b55c0ec41a21bde7f41ab99c87c\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"92b49f9970e327b04d633c047a1b16c2\")"
     ]
   }
 }

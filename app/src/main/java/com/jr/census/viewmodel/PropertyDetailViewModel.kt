@@ -2,6 +2,8 @@ package com.jr.census.viewmodel
 
 import android.app.Activity
 import android.app.Application
+import android.text.TextUtils
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -15,11 +17,14 @@ import com.jr.census.helpers.ResponseServiceCallback
 import com.jr.census.models.*
 import com.jr.census.view.callback.ImageListListener
 import com.jr.census.viewmodel.models.CensusData
+import com.jr.census.viewmodel.models.ERROR
+import com.jr.census.viewmodel.models.SYNC
+import com.jr.census.viewmodel.models.SYNCED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import java.io.File
 import java.util.*
 
@@ -30,6 +35,7 @@ class PropertyDetailViewModel(
     private val picturesRepository: PicturesRepository
 ) : AndroidViewModel(application) {
 
+
     lateinit var property: Property
 
 
@@ -38,8 +44,14 @@ class PropertyDetailViewModel(
     var callIsSelectMode: (() -> Boolean)? = null
     var finishActionMode: (() -> Unit)? = null
     var callEditPicture: ((Picture) -> Unit)? = null
+    var callRefreshItem: ((Int) -> Unit)? = null
+    var callReloadList: ((Picture?) -> Unit)? = null
     var file: File? = null
+    var startSync = true
+
     lateinit var title: String
+
+    private val tableProperties = Hashtable<Int, Boolean?>()
 
     val censusData: CensusData by lazy {
         CensusData()
@@ -87,7 +99,6 @@ class PropertyDetailViewModel(
                             Calendar.getInstance().get(Calendar.YEAR)
                         )
                 }
-
             }
         }
     }
@@ -114,6 +125,10 @@ class PropertyDetailViewModel(
             finishActionMode?.invoke()
         }
 
+        override fun canShowLoading(): Boolean {
+            return property.census != null
+        }
+
     }
 
 
@@ -121,28 +136,46 @@ class PropertyDetailViewModel(
         callCameraFunction?.invoke()
     }
 
-    fun savePicture(location: String) {
+    suspend fun savePicture(location: String) = withContext(IO){
         val order = (picturesRepository.getLastPicture(property.id)?.order ?: 0) + 1
-
-
         val picture = Picture(location, order, property.id)
         picturesRepository.insertPicture(picture)
     }
 
-    fun deletePictures(selectedPictures: List<Picture>?) {
+    fun deletePictures(activity: Activity,selectedPictures: List<Picture>?) {
         if (selectedPictures != null) {
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
+            MainScope().launch {
+                withContext(IO) {
                     //todo, delete from server
-                    picturesRepository.deletePictures(selectedPictures)
-                    launch {
-                        withContext(Dispatchers.IO) {
-                            for (p in selectedPictures) {
-                                val image = File(p.location)
-                                image.delete()
+                    for(p in selectedPictures){
+                        picturesRepository.deletePicture(p, ResponseServiceCallback(object : OnResultFromWebService<ServiceExecutionResponse<Any?>?>{
+                            override fun onSuccess(
+                                result: ServiceExecutionResponse<Any?>?,
+                                statusCode: Int
+                            ) {
+                                if(statusCode == 200){
+                                    MainScope().launch {
+                                        withContext(IO) {
+                                            picturesRepository.deletePicture(p)
+                                            val image = File(p.location)
+                                            image.delete()
+
+                                        }
+                                    }
+
+                                }else{
+                                    Toast.makeText(activity, R.string.errorDeletingPicture, Toast.LENGTH_SHORT).show()
+                                }
                             }
-                        }
+
+                            override fun onFailed(t: Throwable?) {
+                                Toast.makeText(activity, R.string.errorDeletingPictureServer, Toast.LENGTH_SHORT).show()
+                            }
+
+                        }, activity))
                     }
+
+
                 }
             }
 
@@ -190,34 +223,126 @@ class PropertyDetailViewModel(
                 property.census!!.idProperty = property.id
 
 
-                propertiesRepository.saveCensusData(property.census!!, ResponseServiceCallback(
-                    object  : OnResultFromWebService<ServiceExecutionResponse<Any>>{
-                    override fun onSuccess(result: ServiceExecutionResponse<Any>?, statusCode : Int) {
-                        viewModelScope.launch {
-                        withContext(IO){propertiesRepository.saveCensusDataIntoDatabase(property.census!!)}
-                        Toast.makeText(getApplication(), R.string.savedCensusData, Toast.LENGTH_SHORT)
-                            .show()
+                propertiesRepository.saveCensusData(
+                    property.census!!, ResponseServiceCallback(
+                        object : OnResultFromWebService<ServiceExecutionResponse<Any>> {
+                            override fun onSuccess(
+                                result: ServiceExecutionResponse<Any>?,
+                                statusCode: Int
+                            ) {
+                                viewModelScope.launch {
+                                    withContext(IO) {
+                                        propertiesRepository.saveCensusDataIntoDatabase(
+                                            property.census!!
+                                        )
+                                    }
+                                    Toast.makeText(
+                                        getApplication(),
+                                        R.string.savedCensusData,
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
 
-                            withContext(IO) {
-                                synchronizePictures()
+                                    withContext(IO) {
+                                        synchronizePictures(activity)
+                                    }
+                                }
                             }
-                        }
-                    }
 
-                    override fun onFailed(t: Throwable?) {
-                        Toast.makeText(getApplication(), R.string.errorSavingCensusData, Toast.LENGTH_SHORT)
-                            .show()
-                    }
+                            override fun onFailed(t: Throwable?) {
+                                Toast.makeText(
+                                    getApplication(),
+                                    R.string.errorSavingCensusData,
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
 
-                }, activity))
+                        }, activity
+                    )
+                )
             }
 
 
         }
     }
 
-    private fun synchronizePictures() {
+    fun synchronizePictures(activity: Activity) {
+        if(startSync){
+            val table = this.tableProperties
+            callReloadList?.invoke(null)
+            if (property.census != null) {
+                picturesLiveData.value?.forEachIndexed { i, p ->
+                    if(table[p.idLocal] != true){
+                        MainScope().launch {
+                            val pictureDb = withContext(IO){picturesRepository.getPicture(p.idLocal)}
+                            if(pictureDb != null){
+                                uploadPicture(pictureDb, activity, i)
+                            }
+                        }
+                    }
 
+                }
+            }
+        }
+
+
+
+    }
+
+    suspend fun uploadPicture(p: Picture, activity: Activity, i: Int? = null, reloadList : Boolean =true) {
+        if (p.isImageAvailableToUpload() && TextUtils.isEmpty(p.idServer?.trim()) && tableProperties[p.idLocal] != true) {
+            tableProperties[p.idLocal] = true
+            p.setSynchronized(SYNC)
+            if (i != null) {
+                callRefreshItem?.invoke(i)
+            } else if(reloadList){
+                callReloadList?.invoke(p)
+            }
+
+            picturesRepository.addPicture(
+                p, ResponseServiceCallback(
+                    object :
+                        OnResultFromWebService<ServiceExecutionResponse<String?>?> {
+                        override fun onSuccess(
+                            result: ServiceExecutionResponse<String?>?,
+                            statusCode: Int
+                        ) {
+                            MainScope().launch {
+                                if (result?.data != null) {
+                                    p.setSynchronized(SYNCED)
+                                    p.idServer = result.data
+                                    withContext(IO) {
+                                        picturesRepository.updatePicture(p)
+                                    }
+                                } else {
+                                    setError(p)
+                                }
+                            }
+                            tableProperties[p.idLocal] = false
+                        }
+
+                        override fun onFailed(t: Throwable?) {
+
+                            tableProperties[p.idLocal] = false
+                            setError(p)
+                            Log.e("Picture", "Error uploading", t)
+                        }
+
+                        fun setError(p : Picture){
+                            p.setSynchronized(ERROR)
+                            MainScope().launch {
+                                withContext(IO) {
+                                    picturesRepository.updatePicture(p)
+                                }
+                            }
+                        }
+
+                    }, activity
+                )
+            )
+
+        }
     }
 
     fun setAnomalySelection(list: List<Anomaly>?) {

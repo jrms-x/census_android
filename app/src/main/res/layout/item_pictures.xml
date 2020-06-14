@@ -12,8 +12,10 @@
         <variable
             name="listener"
             type="com.jr.census.view.callback.ImageListListener" />
+
+
         <import type="android.text.TextUtils"/>
-        <import type="com.jr.census.R"/>
+
     </data>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -102,9 +104,20 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imageViewBigPicture"
                 android:layout_margin="16dp"
+                android:layout_toStartOf="@id/pictureStatus"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:text="@{picture.description}"
                 tool:text="Aquí irá una descripción de la foto tomada"/>
+
+            <ImageView
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/imageViewBigPicture"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pictureStatus"
+                android:contentDescription="@string/syncStatus" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>

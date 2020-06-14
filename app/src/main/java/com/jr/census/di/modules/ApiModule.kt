@@ -4,14 +4,15 @@ import android.app.Application
 import com.jr.census.R
 import com.jr.census.helpers.SharedPreferencesHelper
 import com.jr.census.models.*
-import com.jr.census.service.web.services.CatalogsService
-import com.jr.census.service.web.services.LoginService
-import com.jr.census.service.web.services.PropertyService
-import com.jr.census.service.web.services.RegisterService
+import com.jr.census.service.web.services.*
 import dagger.Module
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 import javax.inject.Inject
 
 @Module
@@ -40,6 +41,10 @@ class ApiModule @Inject constructor(
         retrofit.create(PropertyService::class.java)
     }
 
+    private val pictures : PictureService by lazy {
+        retrofit.create(PictureService::class.java)
+    }
+
 
 
     fun getAllCatalogs(): Call<CatalogsResponse> {
@@ -62,7 +67,34 @@ class ApiModule @Inject constructor(
         return this.register.register(register)
     }
 
+    fun getPictures(id : Int, year : Int) : Call<List<Picture>>{
+        return pictures.getPictures(getHeaderToken(), id, year)
+    }
+
+    fun deletePicture(picture: Picture) : Call<ServiceExecutionResponse<Any?>?>{
+        return pictures.deletePicture(getHeaderToken(), picture)
+    }
+
+    fun addPicture(picture: Picture) : Call<ServiceExecutionResponse<String?>?>{
+        val file = File(picture.location)
+        val body = RequestBody.create(MediaType.get("image/*"), file)
+        val partFile = MultipartBody.Part.createFormData("image", file.name, body)
+        return pictures.addPicture(getHeaderToken(), partFile, picture.propertyID, picture.title!!,
+            picture.subtitle, picture.description, picture.order, picture.year
+        )
+    }
+
+    fun downloadPicture(blobId : String) : Call<Any?>{
+        return pictures.getPictureFile(getHeaderToken(), blobId)
+    }
+
+    fun updateProperty(property: Property): Call<ServiceExecutionResponse<Any?>?> {
+        return properties.updateProperty(getHeaderToken(), property)
+    }
+
     private fun getHeaderToken(): String {
         return "bearer " + sharedPreferences.getToken()
     }
+
+
 }
