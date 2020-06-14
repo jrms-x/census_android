@@ -2,7 +2,6 @@ package com.jr.census.di.modules
 
 import androidx.lifecycle.LiveData
 import com.jr.census.models.Picture
-import com.jr.census.models.Property
 import com.jr.census.models.ServiceExecutionResponse
 import com.jr.census.service.room.AppDatabase
 import dagger.Module
@@ -60,7 +59,9 @@ class PicturesRepository @Inject constructor(private val database : AppDatabase,
         apiModule.downloadPicture(blobId).enqueue(callback)
     }
 
-    fun updateProperty(property: Property, callback: Callback<ServiceExecutionResponse<Any?>?>){
-        apiModule.updateProperty(property).enqueue(callback)
+    fun setAllPicturesWithErrorToSync(propertyID: Int) {
+        database.pictures().updateErrorToSync(propertyID)
     }
+
+
 }

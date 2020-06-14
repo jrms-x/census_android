@@ -98,5 +98,13 @@
     <string name="syncStatus">Estado de la sincronización</string>
     <string name="errorDeletingPicture">Error al eliminar imágen</string>
     <string name="errorDeletingPictureServer">Error al eliminar imágen, verifique conexión a internet</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="propertyMarker">Ubicación del inmueble</string>
+    <string name="saveLocation">Guardar ubicación</string>
+    <string name="confirmSaveLocation">Guardar ubicacion</string>
+    <string name="saveLocationMessage">¿Desea guardar la ubicación?</string>
+    <string name="errorSavingLocation">Error al guardar ubicación</string>
+    <string name="errorSavingLocationServer">Error al guardar ubicación, verifique conexión a internet</string>
+    <string name="savedLocation">Ubicación guardada</string>
 
 </resources>

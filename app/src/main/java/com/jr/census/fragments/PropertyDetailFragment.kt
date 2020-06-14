@@ -58,7 +58,7 @@ class PropertyDetailFragment : Fragment(){
 
     private val cameraRequest = 0x007
 
-
+    var menu : Menu? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,18 +104,21 @@ class PropertyDetailFragment : Fragment(){
                 R.id.goToGeneralInformation -> {
                     viewModel.title = getString(R.string.info)
                     view?.toolbarPropertyDetail?.title = viewModel.title
+                    menu?.findItem(R.id.saveLocation)?.isVisible = true
                     PropertyGeneralInfoFragment()
                 }
 
                 R.id.goToRegisterCensus -> {
                     viewModel.title = getString(R.string.register_census)
                     view?.toolbarPropertyDetail?.title = viewModel.title
+                    menu?.findItem(R.id.saveLocation)?.isVisible = false
                     PropertyCensusRegister()
                 }
 
                 R.id.goToPictures -> {
                     viewModel.title = getString(R.string.pictures)
                     view?.toolbarPropertyDetail?.title = viewModel.title
+                    menu?.findItem(R.id.saveLocation)?.isVisible = false
                     PropertyPicturesFragment()
                 }
                 else -> throw IllegalStateException("Incorrect id")
@@ -127,6 +130,7 @@ class PropertyDetailFragment : Fragment(){
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.save_property_menu, menu)
+        this.menu = menu
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -144,7 +148,17 @@ class PropertyDetailFragment : Fragment(){
                     }.show()
             }
 
-        }else if(item.itemId == android.R.id.home){
+        }else if (item.itemId == R.id.saveLocation){
+            MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.confirmSaveLocation)
+                .setMessage(R.string.saveLocationMessage)
+                .setPositiveButton(R.string.accept){ _, _ ->
+                    viewModel.saveLocation(requireActivity())
+                }.setNegativeButton(R.string.cancel){ _, _ ->
+
+                }.show()
+
+        }
+        else if(item.itemId == android.R.id.home){
             parentFragment?.childFragmentManager?.popBackStack()
         }
         return true
@@ -154,7 +168,7 @@ class PropertyDetailFragment : Fragment(){
         super.onActivityCreated(savedInstanceState)
         (activity?.application as CensusApplication?)?.appComponent?.inject(this)
         viewModelParent = ViewModelProvider(requireParentFragment(), viewModelFactory).get(MainViewModel::class.java)
-        viewModel = ViewModelProvider((requireActivity() as AppCompatActivity), viewModelFactory).get(PropertyDetailViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(PropertyDetailViewModel::class.java)
         fragmentBinding.viewModel = viewModel
         viewModel.startSync = true
         viewModel.property = property
@@ -255,7 +269,10 @@ class PropertyDetailFragment : Fragment(){
         }
     }
 
-
+    override fun onDetach() {
+        super.onDetach()
+        viewModel.setAllPicturesWithErrorToSync()
+    }
 
     companion object {
 

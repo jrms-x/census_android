@@ -41,27 +41,11 @@ class PicturesAdapter(private val context : Context,
         notifyDataSetChanged()
     }
 
-    fun changeItem(index : Int){
-        notifyItemChanged(index)
-    }
-
     fun deselectAll(){
         sparseSelected.clear()
         notifyDataSetChanged()
     }
 
-    fun reloadList(picture: Picture?){
-        if(picture != null)
-        {
-            scope.launch {
-                val index = withContext(Dispatchers.Default){list.indexOfFirst { picture.idLocal == it.idLocal }}
-                if(index >= 0){
-                    list[index].setSynchronized(picture.pictureSynchronized.getStatus())
-                }
-            }
-        }
-        notifyDataSetChanged()
-    }
 
     fun getAllSelected() : List<Picture>{
         return list.filterIndexed {i, _ -> sparseSelected[i] == true  }

@@ -9,6 +9,7 @@ import dagger.Module
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Callback
 import javax.inject.Inject
 
 @Module
@@ -54,5 +55,13 @@ class PropertiesRepository @Inject constructor (private val database : AppDataba
 
     fun saveCensusDataIntoDatabase(census: PropertyCensusInformation) {
         database.propertyCensus().insert(census)
+    }
+
+    fun updateProperty(property: Property, callback: Callback<ServiceExecutionResponse<Any?>?>){
+        api.updateProperty(property).enqueue(callback)
+    }
+
+    fun updatePropertyDatabase(property: Property){
+        database.properties().update(property)
     }
 }

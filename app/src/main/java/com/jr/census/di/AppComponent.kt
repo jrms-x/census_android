@@ -29,4 +29,5 @@ interface AppComponent {
     fun inject(propertyAttachmentFragment: PropertyAttachmentFragment)
     fun inject(propertyPicturesFragment: PropertyPicturesFragment)
     fun inject(propertyInformationFragment: PropertyInformationFragment)
+    fun inject(propertyLocationFragment: PropertyLocationFragment)
 }

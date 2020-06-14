@@ -20,6 +20,7 @@ import com.jr.census.models.Picture
 import com.jr.census.viewmodel.PropertyDetailViewModel
 import com.jr.census.viewmodel.factories.ViewModelFactory
 import com.jr.census.viewmodel.models.PictureData
+import com.jr.census.viewmodel.models.SYNC
 import kotlinx.android.synthetic.main.fragment_property_pictures.view.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -76,7 +77,7 @@ class PropertyPicturesFragment : Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity().application as CensusApplication).appComponent.inject(this)
-        viewModel = ViewModelProvider((requireActivity() as AppCompatActivity), viewModelFactory)
+        viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
             .get(PropertyDetailViewModel::class.java)
 
         view?.recyclerPictures?.layoutManager = LinearLayoutManager(requireContext())
@@ -108,14 +109,6 @@ class PropertyPicturesFragment : Fragment(){
             editPictureData(it)
         }
 
-        viewModel.callRefreshItem = {
-            (view?.recyclerPictures?.adapter as PicturesAdapter?)?.changeItem(it)
-        }
-
-        viewModel.callReloadList = {
-            (view?.recyclerPictures?.adapter as PicturesAdapter?)?.reloadList(it)
-        }
-
     }
 
     private fun editPictureData(picture: Picture) {
@@ -129,10 +122,11 @@ class PropertyPicturesFragment : Fragment(){
                 picture.title = pictureData.getTitle()?.trim()
                 picture.subtitle = pictureData.getSubtitle()?.trim()
                 picture.description = pictureData.getDescription()?.trim()
+                picture.setSynchronized(SYNC)
                 viewModel.updatePicture(picture)
                 if(picture.isImageAvailableToUpload()){
                     MainScope().launch {
-                        viewModel.uploadPicture(picture, requireActivity(), reloadList = false)
+                        viewModel.uploadPicture(picture, requireActivity())
                     }
 
                 }

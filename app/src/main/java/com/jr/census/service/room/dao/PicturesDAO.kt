@@ -29,4 +29,7 @@ interface PicturesDAO {
 
     @Query("select * from pictures where id = :id limit 1")
     fun getPicture(id: Int): Picture?
+
+    @Query("update pictures set status = 0 where propertyID = :propertyID and status = 2")
+    fun updateErrorToSync(propertyID: Int)
 }

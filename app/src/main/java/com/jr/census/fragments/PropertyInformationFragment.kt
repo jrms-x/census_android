@@ -40,7 +40,7 @@ class PropertyInformationFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity().application as CensusApplication).appComponent.inject(this)
-        viewModel = ViewModelProvider((requireActivity() as AppCompatActivity), viewModelFactory)
+        viewModel = ViewModelProvider(requireParentFragment().requireParentFragment(), viewModelFactory)
             .get(PropertyDetailViewModel::class.java)
         binding.viewModel = viewModel
     }

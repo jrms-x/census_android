@@ -44,8 +44,7 @@ class PropertyDetailViewModel(
     var callIsSelectMode: (() -> Boolean)? = null
     var finishActionMode: (() -> Unit)? = null
     var callEditPicture: ((Picture) -> Unit)? = null
-    var callRefreshItem: ((Int) -> Unit)? = null
-    var callReloadList: ((Picture?) -> Unit)? = null
+
     var file: File? = null
     var startSync = true
 
@@ -270,14 +269,17 @@ class PropertyDetailViewModel(
     fun synchronizePictures(activity: Activity) {
         if(startSync){
             val table = this.tableProperties
-            callReloadList?.invoke(null)
+
             if (property.census != null) {
                 picturesLiveData.value?.forEachIndexed { i, p ->
                     if(table[p.idLocal] != true){
                         MainScope().launch {
-                            val pictureDb = withContext(IO){picturesRepository.getPicture(p.idLocal)}
+                            val pictureDb : Picture? =
+                            withContext(IO){
+                                picturesRepository.getPicture(p.idLocal)
+                            }
                             if(pictureDb != null){
-                                uploadPicture(pictureDb, activity, i)
+                                uploadPicture(pictureDb, activity)
                             }
                         }
                     }
@@ -290,15 +292,9 @@ class PropertyDetailViewModel(
 
     }
 
-    suspend fun uploadPicture(p: Picture, activity: Activity, i: Int? = null, reloadList : Boolean =true) {
+    suspend fun uploadPicture(p: Picture, activity: Activity) {
         if (p.isImageAvailableToUpload() && TextUtils.isEmpty(p.idServer?.trim()) && tableProperties[p.idLocal] != true) {
             tableProperties[p.idLocal] = true
-            p.setSynchronized(SYNC)
-            if (i != null) {
-                callRefreshItem?.invoke(i)
-            } else if(reloadList){
-                callReloadList?.invoke(p)
-            }
 
             picturesRepository.addPicture(
                 p, ResponseServiceCallback(
@@ -330,6 +326,7 @@ class PropertyDetailViewModel(
                         }
 
                         fun setError(p : Picture){
+                            startSync = false
                             p.setSynchronized(ERROR)
                             MainScope().launch {
                                 withContext(IO) {
@@ -392,5 +389,37 @@ class PropertyDetailViewModel(
         if (list?.isNotEmpty() == true) {
             censusData.setChargeTypePosition(list.indexOfFirst { a -> a.id == property.census?.idTypesCharge ?: 0 })
         }
+    }
+
+    fun setAllPicturesWithErrorToSync(){
+        startSync = true
+        MainScope().launch {
+            withContext(IO){
+                picturesRepository.setAllPicturesWithErrorToSync(property.id)
+            }
+        }
+    }
+
+    fun saveLocation(activity: Activity) {
+        propertiesRepository.updateProperty(property, ResponseServiceCallback(object : OnResultFromWebService<ServiceExecutionResponse<Any?>?>{
+            override fun onSuccess(result: ServiceExecutionResponse<Any?>?, statusCode: Int) {
+                if(statusCode == 200){
+                    viewModelScope.launch {
+                        withContext(IO){
+                            propertiesRepository.updatePropertyDatabase(property)
+                        }
+                        Toast.makeText(activity, R.string.savedLocation, Toast.LENGTH_SHORT).show()
+                    }
+                }else{
+                    Toast.makeText(activity, R.string.errorSavingLocation, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailed(t: Throwable?) {
+                t?.printStackTrace()
+                Toast.makeText(activity, R.string.errorSavingLocationServer, Toast.LENGTH_SHORT).show()
+            }
+
+        }, activity))
     }
 }

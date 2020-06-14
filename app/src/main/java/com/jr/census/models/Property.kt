@@ -72,11 +72,11 @@ class Property() : Parcelable {
 
     @ColumnInfo(name = "latitude")
     @SerializedName("latitude")
-    var latitude : Float? = null
+    var latitude : Double? = null
 
     @ColumnInfo(name = "longitude")
     @SerializedName("longitude")
-    var longitude : Float? = null
+    var longitude : Double? = null
 
 
     constructor(parcel: Parcel) : this() {
@@ -99,6 +99,8 @@ class Property() : Parcelable {
         serialNumber = parcel.readString()
         typeService = parcel.readValue(Int::class.java.classLoader) as? Int
         census = parcel.readParcelable(PropertyCensusInformation::class.java.classLoader)
+        latitude = parcel.readDouble()
+        longitude = parcel.readDouble()
     }
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
@@ -120,6 +122,8 @@ class Property() : Parcelable {
         dest?.writeString(serialNumber)
         dest?.writeInt(typeService ?: 0)
         dest?.writeParcelable(census, flags)
+        dest?.writeDouble(latitude ?: 0.0)
+        dest?.writeDouble(longitude ?: 0.0)
     }
 
     override fun describeContents(): Int = 0
