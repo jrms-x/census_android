@@ -140,7 +140,7 @@ class PropertyDetailFragment : Fragment() {
                 }.show()
 
         } else if (item.itemId == android.R.id.home) {
-            parentFragment?.childFragmentManager?.popBackStack()
+            requireActivity().onBackPressed()
         }
         return true
     }
