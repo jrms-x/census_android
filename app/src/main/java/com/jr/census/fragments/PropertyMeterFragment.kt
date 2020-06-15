@@ -45,7 +45,7 @@ class PropertyMeterFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity().application as CensusApplication).appComponent.inject(this)
-        viewModel = ViewModelProvider(requireParentFragment().requireParentFragment(), viewModelFactory)
+        viewModel = ViewModelProvider(requireParentFragment().requireParentFragment().requireParentFragment(), viewModelFactory)
             .get(PropertyDetailViewModel::class.java)
         viewModel.meterBrandsLiveData.observe(viewLifecycleOwner, Observer {
             val adapter =(view?.spinnerMeterBrand?.adapter as CatalogArrayAdapter)

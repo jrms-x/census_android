@@ -3,6 +3,7 @@ package com.jr.census.fragments
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.OperationApplicationException
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -16,6 +17,8 @@ import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import com.jr.census.R
@@ -35,6 +38,7 @@ import id.zelory.compressor.constraint.destination
 import kotlinx.android.synthetic.main.fragment_property_detail.view.*
 import kotlinx.android.synthetic.main.fragment_property_land.view.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -44,21 +48,21 @@ import javax.inject.Inject
 private const val ARG_PROPERTY = "property"
 
 
-class PropertyDetailFragment : Fragment(){
+class PropertyDetailFragment : Fragment() {
 
     lateinit var property: Property
 
     @Inject
-    lateinit var viewModelFactory:  ViewModelFactory
+    lateinit var viewModelFactory: ViewModelFactory
 
-    lateinit var viewModelParent : MainViewModel
-    lateinit var viewModel : PropertyDetailViewModel
+    lateinit var viewModelParent: MainViewModel
+    lateinit var viewModel: PropertyDetailViewModel
 
-    lateinit var fragmentBinding : FragmentPropertyDetailBinding
+    lateinit var fragmentBinding: FragmentPropertyDetailBinding
 
     private val cameraRequest = 0x007
 
-    var menu : Menu? = null
+    var menu: Menu? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,21 +78,16 @@ class PropertyDetailFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        fragmentBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_property_detail, container, false)
+        fragmentBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_property_detail, container, false)
         val view = fragmentBinding.root
-        //view.viewPagerPropertyDetail.adapter = PropertyDetailFragmentAdapter(childFragmentManager)
-        //view.tabLayoutPropertyDetail.setupWithViewPager(view.viewPagerPropertyDetail)
-        view.bottomNavigationPropertyDetail.setOnNavigationItemSelectedListener {
-            goToFragment(it, view.bottomNavigationPropertyDetail.selectedItemId)
-            true
-        }
 
-
+        view.toolbarPropertyDetail?.title = getString(R.string.info)
 
         view.appbarLayoutPropertyDetail.addOnOffsetChangedListener(AppBarScrollChange { _, state ->
-            if(state == AppBarScrollState.EXPANDED){
+            if (state == AppBarScrollState.EXPANDED) {
                 view.fabCameraProperty.show()
-            }else{
+            } else {
                 view.fabCameraProperty.hide()
             }
         })
@@ -96,35 +95,30 @@ class PropertyDetailFragment : Fragment(){
         return view
     }
 
-    private fun goToFragment(item: MenuItem, currentId : Int) {
-
-        if(item.itemId != currentId || childFragmentManager.fragments.size <= 0){
-            val fragment : Fragment =  when(item.itemId){
+    private fun setTitleAndMenu(selectedId: Int?) {
+            when (selectedId) {
 
                 R.id.goToGeneralInformation -> {
                     viewModel.title = getString(R.string.info)
-                    view?.toolbarPropertyDetail?.title = viewModel.title
-                    menu?.findItem(R.id.saveLocation)?.isVisible = true
                     PropertyGeneralInfoFragment()
                 }
 
                 R.id.goToRegisterCensus -> {
                     viewModel.title = getString(R.string.register_census)
-                    view?.toolbarPropertyDetail?.title = viewModel.title
-                    menu?.findItem(R.id.saveLocation)?.isVisible = false
                     PropertyCensusRegister()
                 }
 
                 R.id.goToPictures -> {
                     viewModel.title = getString(R.string.pictures)
-                    view?.toolbarPropertyDetail?.title = viewModel.title
-                    menu?.findItem(R.id.saveLocation)?.isVisible = false
                     PropertyPicturesFragment()
                 }
                 else -> throw IllegalStateException("Incorrect id")
             }
-            childFragmentManager.beginTransaction().replace(R.id.propertyDetailFragment, fragment).commit()
-        }
+
+
+        view?.toolbarPropertyDetail?.title = viewModel.title
+        menu?.findItem(R.id.saveLocation)?.isVisible = selectedId == R.id.goToGeneralInformation
+
 
     }
 
@@ -135,30 +129,29 @@ class PropertyDetailFragment : Fragment(){
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.savePropertyOption){
-            if(viewModel.property.census != null){
+        if (item.itemId == R.id.savePropertyOption) {
+            if (viewModel.property.census != null) {
                 Toast.makeText(context, R.string.censusAlreadySaved, Toast.LENGTH_SHORT).show()
-            }else{
+            } else {
                 MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.confirmSaveCensus)
                     .setMessage(R.string.saveCensusMessage)
-                    .setPositiveButton(R.string.accept){ _, _ ->
+                    .setPositiveButton(R.string.accept) { _, _ ->
                         viewModel.saveCensusData(requireActivity())
-                    }.setNegativeButton(R.string.cancel){ _, _ ->
+                    }.setNegativeButton(R.string.cancel) { _, _ ->
 
                     }.show()
             }
 
-        }else if (item.itemId == R.id.saveLocation){
+        } else if (item.itemId == R.id.saveLocation) {
             MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.confirmSaveLocation)
                 .setMessage(R.string.saveLocationMessage)
-                .setPositiveButton(R.string.accept){ _, _ ->
+                .setPositiveButton(R.string.accept) { _, _ ->
                     viewModel.saveLocation(requireActivity())
-                }.setNegativeButton(R.string.cancel){ _, _ ->
+                }.setNegativeButton(R.string.cancel) { _, _ ->
 
                 }.show()
 
-        }
-        else if(item.itemId == android.R.id.home){
+        } else if (item.itemId == android.R.id.home) {
             parentFragment?.childFragmentManager?.popBackStack()
         }
         return true
@@ -167,18 +160,30 @@ class PropertyDetailFragment : Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (activity?.application as CensusApplication?)?.appComponent?.inject(this)
-        viewModelParent = ViewModelProvider(requireParentFragment(), viewModelFactory).get(MainViewModel::class.java)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(PropertyDetailViewModel::class.java)
+
+
+        viewModelParent = ViewModelProvider(
+            requireParentFragment(),
+            viewModelFactory
+        ).get(MainViewModel::class.java)
+        viewModel =
+            ViewModelProvider(this, viewModelFactory).get(PropertyDetailViewModel::class.java)
         fragmentBinding.viewModel = viewModel
         viewModel.startSync = true
         viewModel.property = property
         viewModel.loadCensusData()
+        viewModel.callShowPicture = {file ->
+            Intent(Intent.ACTION_VIEW).let {
+                it.setDataAndType(FileProvider.getUriForFile(requireContext(), FILE_AUTHORITY, file), "image/*")
+                startActivity(it)
+            }
+        }
         viewModel.callCameraFunction = {
             callCamera()
         }
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             view?.bottomNavigationPropertyDetail?.selectedItemId = R.id.goToGeneralInformation
-        }else{
+        } else {
             view?.toolbarPropertyDetail?.title = viewModel.title
         }
 
@@ -219,13 +224,27 @@ class PropertyDetailFragment : Fragment(){
             viewModel.synchronizePictures(requireActivity())
         })
 
+        val navHostFragment =
+            childFragmentManager.findFragmentById(R.id.propertyDetailFragment) as NavHostFragment
+        view?.bottomNavigationPropertyDetail?.setupWithNavController(navHostFragment.navController)
+        navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
+            setTitleAndMenu(destination.id)
+        }
+        /*view?.bottomNavigationPropertyDetail?.setOnNavigationItemSelectedListener {
+            setTitleAndMenu(it, view?.bottomNavigationPropertyDetail?.selectedItemId)
+
+        }*/
+
     }
 
     private fun callCamera() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also {intent ->
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { intent ->
             intent.resolveActivity(activity?.packageManager!!)?.also {
                 viewModel.file = createFileForPicture()
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(requireContext(), FILE_AUTHORITY, viewModel.file!! ))
+                intent.putExtra(
+                    MediaStore.EXTRA_OUTPUT,
+                    FileProvider.getUriForFile(requireContext(), FILE_AUTHORITY, viewModel.file!!)
+                )
                 startActivityForResult(intent, cameraRequest)
             }
 
@@ -234,9 +253,12 @@ class PropertyDetailFragment : Fragment(){
 
     private fun createFileForPicture(): File {
 
-        val file = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), UUID.randomUUID().toString() + ".jpg")
-        if(!file.exists()){
-            if(!file.createNewFile()){
+        val file = File(
+            context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            UUID.randomUUID().toString() + ".jpg"
+        )
+        if (!file.exists()) {
+            if (!file.createNewFile()) {
                 throw OperationApplicationException("Couldn't create file")
             }
         }
@@ -244,19 +266,19 @@ class PropertyDetailFragment : Fragment(){
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == cameraRequest){
-            if(resultCode != RESULT_OK){
+        if (requestCode == cameraRequest) {
+            if (resultCode != RESULT_OK) {
                 Log.d("picture", "Picture not taken, deleting file...")
                 viewModel.viewModelScope.launch {
-                    withContext(Dispatchers.IO){
-                        if(viewModel.file?.delete() == true){
+                    withContext(Dispatchers.IO) {
+                        if (viewModel.file?.delete() == true) {
                             Log.d("picture", "File deleted")
                         }
                     }
                 }
-            }else{
+            } else {
                 viewModel.viewModelScope.launch {
-                    val file = Compressor.compress(requireContext(),viewModel.file!!){
+                    val file = Compressor.compress(requireContext(), viewModel.file!!) {
                         default()
                         destination(viewModel.file!!)
                     }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/goToGeneralInformation"
+    android:id="@+id/navigation_property_detail">
+    <fragment
+        android:id="@+id/goToGeneralInformation"
+        android:name="com.jr.census.fragments.PropertyGeneralInfoFragment"
+        android:label="@string/detail"
+        tools:layout="@layout/fragment_property_general_info"
+        />
+    <fragment
+        android:id="@+id/goToRegisterCensus"
+        android:name="com.jr.census.fragments.PropertyCensusRegister"
+        android:label="@string/register_census"
+        tools:layout="@layout/fragment_property_census_register"
+        />
+    <fragment
+        android:id="@+id/goToPictures"
+        android:name="com.jr.census.fragments.PropertyPicturesFragment"
+        android:label="@string/pictures"
+        tools:layout="@layout/fragment_property_pictures"
+        />
+</navigation>

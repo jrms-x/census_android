@@ -33,15 +33,16 @@
                />
        </com.google.android.material.appbar.AppBarLayout>
 
-       <!--androidx.core.widget.NestedScrollView
-           android:id="@+id/scrollDetail"
-           android:layout_width="match_parent"
-           android:fillViewport="true"
-           app:layout_behavior="@string/appbar_scrolling_view_behavior"
-           android:layout_marginBottom="?attr/actionBarSize"
-           android:overScrollMode="never"
-           android:layout_height="match_parent"-->
-           <FrameLayout
+            <fragment
+                android:layout_marginBottom="?attr/actionBarSize"
+                android:layout_width="match_parent"
+                android:id="@+id/propertyDetailFragment"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                app:defaultNavHost="true"
+                app:navGraph="@navigation/navigation_property_detail"
+                android:layout_height="match_parent"/>
+           <!--FrameLayout
                android:layout_marginBottom="?attr/actionBarSize"
                android:layout_gravity="center"
                android:layout_width="match_parent"
@@ -49,9 +50,9 @@
                android:id="@+id/propertyDetailFragment"
                app:layout_behavior="@string/appbar_scrolling_view_behavior"
 
-               />
+               /-->
 
-       <!--/androidx.core.widget.NestedScrollView-->
+
 
 
        

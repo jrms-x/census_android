@@ -44,6 +44,7 @@ class PropertyDetailViewModel(
     var callIsSelectMode: (() -> Boolean)? = null
     var finishActionMode: (() -> Unit)? = null
     var callEditPicture: ((Picture) -> Unit)? = null
+    var callShowPicture: ((File) -> Unit)? = null
 
     var file: File? = null
     var startSync = true

@@ -42,7 +42,7 @@ class PropertyLocationFragment : Fragment(), OnMapReadyCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity().application as CensusApplication).appComponent.inject(this)
-        viewModel = ViewModelProvider(requireParentFragment().requireParentFragment(),
+        viewModel = ViewModelProvider(requireParentFragment().requireParentFragment().requireParentFragment(),
             viewModelFactory).get(PropertyDetailViewModel::class.java)
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapLocation) as SupportMapFragment
         mapFragment.getMapAsync(this)

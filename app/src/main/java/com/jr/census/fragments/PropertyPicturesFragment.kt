@@ -77,7 +77,7 @@ class PropertyPicturesFragment : Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity().application as CensusApplication).appComponent.inject(this)
-        viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
+        viewModel = ViewModelProvider(requireParentFragment().requireParentFragment(), viewModelFactory)
             .get(PropertyDetailViewModel::class.java)
 
         view?.recyclerPictures?.layoutManager = LinearLayoutManager(requireContext())
