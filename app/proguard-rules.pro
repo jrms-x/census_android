@@ -37,3 +37,9 @@
    protected Object[][] getContents();
 
 }
+
+@Keep public class ParcelableArg implements Parcelable { ... }
+
+@Keep public class SerializableArg implements Serializable { ... }
+
+@Keep public enum EnumArg { ... }

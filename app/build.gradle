@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
 
@@ -105,4 +106,6 @@ dependencies {
     implementation 'id.zelory:compressor:3.0.0' //from https://github.com/zetbaitsu/Compressor
 
     implementation 'com.squareup.picasso:picasso:2.71828' //images from resource
+
+
 }

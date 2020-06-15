@@ -3,17 +3,17 @@ package com.jr.census.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import com.jr.census.R
 import com.jr.census.CensusApplication
 import com.jr.census.di.modules.CatalogsRepository
-import com.jr.census.fragments.MainFragment
-import com.jr.census.helpers.MAIN_FRAGMENT_TAG
+import com.jr.census.fragments.PropertyDetailFragment
 import com.jr.census.helpers.ResponseServiceCallback
 import com.jr.census.helpers.OnResultFromWebService
-import com.jr.census.helpers.PROPERTIES_FRAGMENT_TAG
 import com.jr.census.models.CatalogsResponse
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_property_detail.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var catalogsRepository: CatalogsRepository
 
-    private var mainFragment: MainFragment? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,15 +31,9 @@ class MainActivity : AppCompatActivity() {
         (application as CensusApplication).appComponent.inject(this)
         val catalogsCallback = ResponseServiceCallback(onCatalogsResult, this)
         if (savedInstanceState == null) {
-            mainFragment = MainFragment.newInstance()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, mainFragment!!, MAIN_FRAGMENT_TAG)
-                .commitNow()
             if(intent.getBooleanExtra("getCatalogs", false)){
                 catalogsRepository.getCatalogs(catalogsCallback)
             }
-        }else{
-            mainFragment = supportFragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG) as MainFragment
         }
 
 
@@ -66,14 +59,16 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onBackPressed() {
-        if(mainFragment?.childFragmentManager?.backStackEntryCount ?: 0 > 0 ){
-            val fragment = mainFragment?.childFragmentManager?.findFragmentByTag(
-                PROPERTIES_FRAGMENT_TAG)
-            if(fragment?.isVisible == false){ //main fragment is visible
-                mainFragment?.childFragmentManager?.popBackStack()
+        val currentFragment = fragmentMain.childFragmentManager.fragments.first()
+        val mainNavigation = Navigation.findNavController(this, R.id.fragmentMain)
+        if(currentFragment is PropertyDetailFragment){
+            val navHostDetail = currentFragment.childFragmentManager.findFragmentById(R.id.propertyDetailParentFragment) as NavHostFragment
+            if(!navHostDetail.navController.navigateUp()){
+                mainNavigation.navigateUp()
             }
         }else{
             super.onBackPressed()
         }
+
     }
 }

@@ -3,7 +3,6 @@ package com.jr.census.fragments
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.OperationApplicationException
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -12,7 +11,6 @@ import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.ActionMode
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -23,7 +21,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import com.jr.census.R
 import com.jr.census.CensusApplication
-import com.jr.census.adapters.CatalogArrayAdapter
 import com.jr.census.databinding.FragmentPropertyDetailBinding
 import com.jr.census.helpers.AppBarScrollChange
 import com.jr.census.helpers.AppBarScrollState
@@ -36,9 +33,7 @@ import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.default
 import id.zelory.compressor.constraint.destination
 import kotlinx.android.synthetic.main.fragment_property_detail.view.*
-import kotlinx.android.synthetic.main.fragment_property_land.view.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -65,13 +60,6 @@ class PropertyDetailFragment : Fragment() {
     var menu: Menu? = null
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            property = it.getParcelable(ARG_PROPERTY)!!
-
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -161,6 +149,7 @@ class PropertyDetailFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         (activity?.application as CensusApplication?)?.appComponent?.inject(this)
 
+        property = PropertyDetailFragmentArgs.fromBundle(requireArguments()).propertySelected
 
         viewModelParent = ViewModelProvider(
             requireParentFragment(),
@@ -225,7 +214,7 @@ class PropertyDetailFragment : Fragment() {
         })
 
         val navHostFragment =
-            childFragmentManager.findFragmentById(R.id.propertyDetailFragment) as NavHostFragment
+            childFragmentManager.findFragmentById(R.id.propertyDetailParentFragment) as NavHostFragment
         view?.bottomNavigationPropertyDetail?.setupWithNavController(navHostFragment.navController)
         navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
             setTitleAndMenu(destination.id)
@@ -296,14 +285,5 @@ class PropertyDetailFragment : Fragment() {
         viewModel.setAllPicturesWithErrorToSync()
     }
 
-    companion object {
 
-        @JvmStatic
-        fun newInstance(property: Property) =
-            PropertyDetailFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(ARG_PROPERTY, property)
-                }
-            }
-    }
 }

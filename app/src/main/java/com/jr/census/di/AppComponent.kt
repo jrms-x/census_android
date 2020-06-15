@@ -14,7 +14,6 @@ import javax.inject.Singleton
     RegisterRepository::class, PropertiesRepository::class, PicturesRepository::class ,ApplicationModule::class,
     DatabaseModule::class, ApiModule::class, SharedPreferencesModule::class])
 interface AppComponent {
-    fun inject(mainFragment: MainFragment)
     fun inject(propertiesFragment: PropertiesFragment)
     fun inject(mainActivity: MainActivity)
     fun inject(launchActivity: LaunchActivity)

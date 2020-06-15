@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/goToPropertiesList"
+    android:id="@+id/main_navigation">
+
+    <fragment
+        android:id="@+id/goToPropertiesList"
+        android:name="com.jr.census.fragments.PropertiesFragment"
+        android:label="@string/properties"
+        tools:layout="@layout/fragment_properties"
+        >
+        <action
+            android:id="@+id/propertyDetailAction"
+            app:destination="@id/goToPropertyDetail" >
+            <argument
+                android:name="propertySelected"
+                app:argType="com.jr.census.models.Property"
+                app:nullable="false"
+                />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/goToPropertyDetail"
+        android:name="com.jr.census.fragments.PropertyDetailFragment"
+        android:label="@string/property"
+        tools:layout="@layout/fragment_property_detail"
+        >
+        <argument
+            android:name="propertySelected"
+            app:argType="com.jr.census.models.Property"
+            app:nullable="false"
+            />
+    </fragment>
+
+</navigation>

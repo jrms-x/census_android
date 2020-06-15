@@ -106,5 +106,6 @@
     <string name="errorSavingLocation">Error al guardar ubicación</string>
     <string name="errorSavingLocationServer">Error al guardar ubicación, verifique conexión a internet</string>
     <string name="savedLocation">Ubicación guardada</string>
+    <string name="properties">Inmuebles</string>
 
 </resources>

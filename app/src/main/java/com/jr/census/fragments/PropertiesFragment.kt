@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jr.census.R
@@ -54,7 +55,7 @@ class PropertiesFragment : Fragment(),  ShowDialogBlock, PropertyListListener{
     private var bottomSheetView : View? = null
 
     @Inject
-    lateinit var mainViewModelFactory : ViewModelFactory
+    lateinit var viewModelFactory : ViewModelFactory
 
 
     override fun onCreateView(
@@ -138,7 +139,11 @@ class PropertiesFragment : Fragment(),  ShowDialogBlock, PropertyListListener{
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (activity?.application as CensusApplication).appComponent.inject(this)
-        viewModel = ViewModelProvider(requireParentFragment(), mainViewModelFactory).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+
+        if(savedInstanceState == null){
+            viewModel.getProperties(requireActivity())
+        }
 
         if(viewModel.selectBlockModel.getBlockNumber() ?: -1 < 0){
             viewModel.setMessage(R.string.select_block_message)
@@ -194,9 +199,11 @@ class PropertiesFragment : Fragment(),  ShowDialogBlock, PropertyListListener{
     }
 
     override fun onClickProperty(property: Property) {
-        val propertyDetailFragment = PropertyDetailFragment.newInstance(property)
-        parentFragmentManager.beginTransaction().
-        replace(R.id.childContainer, propertyDetailFragment).addToBackStack(null).commit()
+
+        val action = PropertiesFragmentDirections.propertyDetailAction(property)
+        val navigation = Navigation.findNavController(requireActivity(), R.id.fragmentMain)
+        navigation.navigate(action)
+
     }
 
 
