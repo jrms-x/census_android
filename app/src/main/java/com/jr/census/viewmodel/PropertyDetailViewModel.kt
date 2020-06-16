@@ -272,7 +272,7 @@ class PropertyDetailViewModel(
             val table = this.tableProperties
 
             if (property.census != null) {
-                picturesLiveData.value?.forEachIndexed { i, p ->
+                picturesLiveData.value?.forEach { p ->
                     if(table[p.idLocal] != true){
                         MainScope().launch {
                             val pictureDb : Picture? =

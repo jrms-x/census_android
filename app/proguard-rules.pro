@@ -38,8 +38,18 @@
 
 }
 
-@Keep public class ParcelableArg implements Parcelable { ... }
+#@Keep public class ParcelableArg implements Parcelable { ... }
 
-@Keep public class SerializableArg implements Serializable { ... }
+#@Keep public class SerializableArg implements Serializable { ... }
 
-@Keep public enum EnumArg { ... }
+#@Keep public enum EnumArg { ... }
+
+-keepnames class com.jr.census.models.Property
+-keepnames class com.jr.census.models.PropertyCensusInformation
+
+-keep class com.facebook.** { *; }
+
+-keep class com.google.android.gms.maps.** { *; }
+-keep interface com.google.android.gms.maps.** { *; }
+
+

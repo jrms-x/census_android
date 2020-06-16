@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.jr.census.R
+import com.jr.census.adapters.PropertyAdapterInformation
 import com.jr.census.adapters.PropertyDetailFragmentAdapter
 import com.jr.census.viewmodel.PropertyDetailViewModel
 import com.jr.census.viewmodel.factories.ViewModelFactory
@@ -29,10 +30,7 @@ class PropertyGeneralInfoFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_property_general_info, container, false)
-        view.viewPagerInfo.adapter = PropertyDetailFragmentAdapter(childFragmentManager,
-            arrayOf(Pair(getString(R.string.info),  PropertyInformationFragment::class),
-                Pair(getString(R.string.location),  PropertyLocationFragment::class))
-        )
+        view.viewPagerInfo.adapter = PropertyAdapterInformation(childFragmentManager,requireContext())
         view.tabLayoutInfo.setupWithViewPager(view.viewPagerInfo)
         return view
     }
